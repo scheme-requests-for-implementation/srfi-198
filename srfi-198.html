@@ -1,10 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>SRFI 198: POSIX system call exceptions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/srfi.css" type="text/css" />
-    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/srfi.css" type="text/css">
+    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
   </head>
 
   <body>
@@ -40,7 +41,7 @@ procedures never return error codes
 or use an analogue of the P<small>OSIX</small> <code>errno</code>
 variable to indicate system-call-level errors.
 Instead, errors are reported by raising exceptions.</p>
-This frees up the procedures to return useful
+<p>This frees up the procedures to return useful
 values, and allows the programmer to assume that if a system call
 returns, it succeeded. This greatly simplifies the flow of the code
 from the programmer's point of view.</p>
@@ -56,7 +57,7 @@ condition objects to be injected, inspected, and detected
 
 <h2>Procedures</h2>
 <p>
-<p><div><code>(make-syscall-error <i>errno message procedure data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(make-syscall-error <i>errno message procedure data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Return an object representing a syscall error.
 It contains slots for the P<small>OSIX</small> <code>errno</code>,
 a message string, the name of the procedure that determined the error,
@@ -66,21 +67,21 @@ value of zero does not represent an error, so such an object
 can be used to specify a higher-level error such as a mismatch
 between a Scheme argument type and the C type required by P<small>OSIX</small>.
 </p>
-<p><div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns <code>#t</code> if <em>obj</em> is an object
 representing a syscall error, and <code>#f</code> otherwise.</p>
-<p><div><code>(syscall-error:errno <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>exact integer</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(syscall-error:errno <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>exact integer</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns the P<small>OSIX</small> error number of the condition object
 <em>syscall-obj</em>.</p>
-<p><div><code>(syscall-error:message <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(syscall-error:message <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns an error message associated with the P<small>OSIX</small>
 error number of the condition object <em>syscall-obj</em>.</p>
-<p><div><code>(syscall-error:procedure <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(syscall-error:procedure <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns the name of the procedure reporting this error.</p>
-<p><div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
-Returns a list of arbitrary objects associated with 
+<div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns a list of arbitrary objects associated with 
 the condition object <em>syscall-obj</em>.</p>
-<p><div><code>(errno-error <i>errno procedure-name syscall-name obj</i> ...)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>does not return</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div></p>
+<div><code>(errno-error <i>errno procedure-name syscall-name obj</i> ...)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>does not return</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Constructs a syscall error object <i>s</i>.
 The message field of <i>s</i> is constructed from
 <em>procedure-name</em> (the name of the Scheme procedure that called <code>errno-error</code>),
