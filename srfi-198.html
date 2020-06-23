@@ -83,16 +83,16 @@ representing a syscall error, and <code>#f</code> otherwise.</p>
 <div><code>(syscall-error:message <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns an error message associated with the P<small>OSIX</small>
 error number of the condition object <em>syscall-obj</em>.</p>
-<div><code>(syscall-error:procedure <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<div><code>(syscall-error:procedure-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns the name of the procedure reporting this error.</p>
 <div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns a list of arbitrary objects associated with 
 the condition object <em>syscall-obj</em>.</p>
 <div><code>(errno-error <i>errno procedure-name syscall-name obj</i> ...)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>does not return</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Constructs a syscall error object <i>s</i>.
-The message field of <i>s</i> is constructed from
-<em>procedure-name</em> (the name of the Scheme procedure that called <code>errno-error</code>),
-<em>syscall-name</em> (the name of the system call that failed), and
+The message field of <i>s</i> should incorporate
+<em>procedure-name</em> (a symbol, the name of the Scheme procedure that called <code>errno-error</code>),
+<em>syscall-name</em> (a symbol, the name of the system call that failed), and
 an error message string associated with <i>errno</i>,
 possibly obtained from the P<small>OSIX</small> <code>strerror</code> function.
 Its exact format is implementation-defined.
@@ -101,9 +101,15 @@ are set from the corresponding arguments,
 and the <i>data</i> field of <i>s</i> from the <i>objs</i>.
 The exception <i>s</i> is then raised with <code>raise</code>
 to make sure that the caller of <code>errno-err</code> cannot
-return normally.
-<h1>Implementation</h1>
+return normally.</p>
+<div><code>(errno-string <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns an explanatory message associated with the error code <i>errno</i>.
+It can be implemented with P<small>OSIX</small> <code>strerror()</code>.</p>
+<div><code>(errno-name <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns a symbol associated with the error code <i>errno</i>.
+The uppercase names of these symbols are defined in <code>errno.h</code>.</p>
 
+<h1>Implementation</h1>
 A sample implementation of this SRFI can (not yet) be found in the repository.
 <h1>Acknowledgements</h1>
 
