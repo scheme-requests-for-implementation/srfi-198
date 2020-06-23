@@ -23,12 +23,17 @@ John Cowan (editor and shepherd), Harold Ancell (implementer and editor)
 <h1>Abstract</h1>
 
 <p>
-When P<small>OSIX</small> system calls are mapped to Scheme exceptions,
+When errors in P<small>OSIX</small> system calls are mapped to Scheme exceptions,
 this small SRFI provides the means to construct, signal, and extract
 information from those signals in a reasonably uniform way.
 They are in their own SRFI in order to avoid being tied to any
 single P<small>OSIX</small>-based SRFI such as SRFI 170.
 </p>
+
+<p>This SRFI is dedicated to the memory of Olin Shivers (1924-1995),
+<i>sine quo non</i>.  (Why <i>quo</i>?  Because in <i>sine qua non</i>
+the pronoun is feminine, agreeing with <i>re</i> 'thing' understood,
+whereas Olin was masculine.)</p>
 
 <h1>Issues</h1>
 
@@ -57,16 +62,11 @@ condition objects to be injected, inspected, and detected
 
 <h2>Procedures</h2>
 <p>
-<div><code>(make-syscall-error <i>errno message procedure data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<div><code>(make-syscall-error <i>errno message procedure-name data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Return an object representing a syscall error.
 It contains slots for the P<small>OSIX</small> <code>errno</code>,
 a message string, the name of the procedure that determined the error,
-and a list of arbitrary objects.</p>
-<p>P<small>OSIX</small> mandates that an <code>errno</code>
-value of zero does not represent an error, so such an object
-can be used to specify a higher-level error such as a mismatch
-between a Scheme argument type and the C type required by P<small>OSIX</small>.
-</p>
+and a list of arbitrary objects, possibly the arguments to the syscall.</p>
 <div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns <code>#t</code> if <em>obj</em> is an object
 representing a syscall error, and <code>#f</code> otherwise.</p>
@@ -106,9 +106,9 @@ The uppercase names of these symbols are defined in <code>errno.h</code>.</p>
 A sample implementation of this SRFI can (not yet) be found in the repository.
 <h1>Acknowledgements</h1>
 
-Thanks to Olin Shivers, <i>sine qua non</i>, and all the Scheme implementors
+Thanks to Olin Shivers and all the Scheme implementers
 who have followed his work.  Thanks also to all the participants in the
-SRFI mailing list.
+SRFI 170 and SRFI 198 mailing lists.
 
 <h1>Copyright</h1>
 Copyright &copy; 2020 by John Cowan.
