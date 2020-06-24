@@ -57,10 +57,11 @@ condition objects to be injected, inspected, and detected
 
 <h2>Procedures</h2>
 <p>
-<div><code>(make-syscall-error <i>errno message procedure-name data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<div><code>(make-syscall-error <i>errno message procedure-name syscall-name data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Return an object representing a syscall error.
 It contains slots for the P<small>OSIX</small> <code>errno</code>,
-a message string, the name of the procedure that determined the error,
+a message string, the name of the Scheme procedure that reported the error,
+the C name of the system call that reported the error,
 and a list of arbitrary objects, possibly the arguments to the syscall.</p>
 <div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns <code>#t</code> if <em>obj</em> is an object
@@ -72,7 +73,9 @@ representing a syscall error, and <code>#f</code> otherwise.</p>
 <p>Returns an error message associated with the P<small>OSIX</small>
 error number of the condition object <em>syscall-obj</em>.</p>
 <div><code>(syscall-error:procedure-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns the name of the procedure reporting this error.</p>
+<p>Returns the name of the Scheme procedure reporting this error.</p>
+<div><code>(syscall-error:syscall-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns the C name of the P<small>OSIX</small> procedure reporting this error.</p>
 <div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns a list of arbitrary objects associated with 
 the condition object <em>syscall-obj</em>.</p>
