@@ -20,17 +20,10 @@ John Cowan (editor and shepherd), Harold Ancell (implementer and editor)
 
 <h1>Status</h1>
 
-<p>This SRFI is currently in <em>draft</em> status.  Here is <a href="https://srfi.schemers.org/srfi-process.html">an explanation</a> of each status that a SRFI can hold.  To provide input on this SRFI, please send email to <code><a href="mailto:srfi+minus+198+at+srfi+dotschemers+dot+org">srfi-198@<span class="antispam">nospam</span>srfi.schemers.org</a></code>.  To subscribe to the list, follow <a href="https://srfi.schemers.org/srfi-list-subscribe.html">these instructions</a>.  You can access previous messages via the mailing list <a href="https://srfi-email.schemers.org/srfi-198">archive</a>.</p>
-<ul>
-  <li>Received: 2020-06-16</li>
-  <li>60-day deadline: 2020-08-15</li>
-  <li>Draft #1 published: 2020-06-16</li>
-</ul>
-
 <h1>Abstract</h1>
 
 <p>
-When P<small>OSIX</small> system calls are mapped to Scheme exceptions,
+When errors in P<small>OSIX</small> system calls are mapped to Scheme exceptions,
 this small SRFI provides the means to construct, signal, and extract
 information from those signals in a reasonably uniform way.
 They are in their own SRFI in order to avoid being tied to any
@@ -64,16 +57,12 @@ condition objects to be injected, inspected, and detected
 
 <h2>Procedures</h2>
 <p>
-<div><code>(make-syscall-error <i>errno message procedure data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<div><code>(make-syscall-error <i>errno message procedure-name syscall-name data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Return an object representing a syscall error.
 It contains slots for the P<small>OSIX</small> <code>errno</code>,
-a message string, the name of the procedure that determined the error,
-and a list of arbitrary objects.</p>
-<p>P<small>OSIX</small> mandates that an <code>errno</code>
-value of zero does not represent an error, so such an object
-can be used to specify a higher-level error such as a mismatch
-between a Scheme argument type and the C type required by P<small>OSIX</small>.
-</p>
+a message string, the name of the Scheme procedure that reported the error,
+the C name of the system call that reported the error,
+and a list of arbitrary objects, possibly the arguments to the syscall.</p>
 <div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns <code>#t</code> if <em>obj</em> is an object
 representing a syscall error, and <code>#f</code> otherwise.</p>
@@ -83,16 +72,18 @@ representing a syscall error, and <code>#f</code> otherwise.</p>
 <div><code>(syscall-error:message <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns an error message associated with the P<small>OSIX</small>
 error number of the condition object <em>syscall-obj</em>.</p>
-<div><code>(syscall-error:procedure <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns the name of the procedure reporting this error.</p>
+<div><code>(syscall-error:procedure-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns the name of the Scheme procedure reporting this error.</p>
+<div><code>(syscall-error:syscall-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns the C name of the P<small>OSIX</small> procedure reporting this error.</p>
 <div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Returns a list of arbitrary objects associated with 
 the condition object <em>syscall-obj</em>.</p>
 <div><code>(errno-error <i>errno procedure-name syscall-name obj</i> ...)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>does not return</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
 <p>Constructs a syscall error object <i>s</i>.
-The message field of <i>s</i> is constructed from
-<em>procedure-name</em> (the name of the Scheme procedure that called <code>errno-error</code>),
-<em>syscall-name</em> (the name of the system call that failed), and
+The message field of <i>s</i> should incorporate
+<em>procedure-name</em> (a symbol, the name of the Scheme procedure that called <code>errno-error</code>),
+<em>syscall-name</em> (a symbol, the name of the system call that failed), and
 an error message string associated with <i>errno</i>,
 possibly obtained from the P<small>OSIX</small> <code>strerror</code> function.
 Its exact format is implementation-defined.
@@ -101,15 +92,21 @@ are set from the corresponding arguments,
 and the <i>data</i> field of <i>s</i> from the <i>objs</i>.
 The exception <i>s</i> is then raised with <code>raise</code>
 to make sure that the caller of <code>errno-err</code> cannot
-return normally.
-<h1>Implementation</h1>
+return normally.</p>
+<div><code>(errno-string <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns an explanatory message associated with the error code <i>errno</i>.
+It can be implemented with P<small>OSIX</small> <code>strerror()</code>.</p>
+<div><code>(errno-name <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
+<p>Returns a symbol associated with the error code <i>errno</i>.
+The uppercase names of these symbols are defined in <code>errno.h</code>.</p>
 
+<h1>Implementation</h1>
 A sample implementation of this SRFI can (not yet) be found in the repository.
 <h1>Acknowledgements</h1>
 
-Thanks to Olin Shivers, <i>sine qua non</i>, and all the Scheme implementors
+Thanks to Olin Shivers and all the Scheme implementers
 who have followed his work.  Thanks also to all the participants in the
-SRFI mailing list.
+SRFI 170 and SRFI 198 mailing lists.
 
 <h1>Copyright</h1>
 Copyright &copy; 2020 by John Cowan.
