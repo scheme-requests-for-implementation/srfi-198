@@ -5,7 +5,7 @@
 
   (import (scheme base)
           (chibi)
-          (only (chibi process) exit)
+          ;; (only (chibi process) exit)
           (chibi test)
 
           (srfi 198)

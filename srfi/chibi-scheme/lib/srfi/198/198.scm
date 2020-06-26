@@ -1,3 +1,5 @@
+;; please see copyright notice in ./COPYING
+
 (define errno-map (make-hash-table))
 
 (map (lambda (errno-number errno-symbol) (hash-table-set! errno-map errno-number errno-symbol))
@@ -21,7 +23,7 @@
       errno/ERANGE errno/EROFS errno/ESPIPE errno/ESRCH errno/ESTALE
       errno/ETIMEDOUT errno/ETXTBSY errno/EWOULDBLOCK errno/EXDEV
 
-      (cond-expand ((not bsd)
+      (cond-expand ((not openbsd)
                     errno/EMULTIHOP errno/ENOLINK
                     ;; STREAMS:
                     errno/ENODATA errno/ENOSTR errno/ENOSR errno/ETIME)))
@@ -46,15 +48,15 @@
       'errno/ERANGE 'errno/EROFS 'errno/ESPIPE 'errno/ESRCH 'errno/ESTALE
       'errno/ETIMEDOUT 'errno/ETXTBSY 'errno/EWOULDBLOCK 'errno/EXDEV
 
-      (cond-expand ((not bsd)
+      (cond-expand ((not openbsd)
                     'errno/EMULTIHOP 'errno/ENOLINK
                     ;; STREAMS:
                     'errno/ENODATA 'errno/ENOSTR 'errno/ENOSR 'errno/ETIME))
       ))
 
 (define-record-type syscall-error
-  (make-syscall-error errno message procedure-name syscall-name data)
-  syscall-error?
+    (make-syscall-error errno message procedure-name syscall-name data)
+    syscall-error?
   (errno syscall-error:errno)
   (message syscall-error:message)
   (procedure-name syscall-error:procedure-name)
