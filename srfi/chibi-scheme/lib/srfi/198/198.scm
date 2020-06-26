@@ -76,9 +76,11 @@
           data)))
 
 (define (errno-string errno)
-  ;; call %strerror_r
-  #f
-  )
+  (if (not (exact-integer? errno))
+      (srfi-198-error "errno-string requires an exact integer" 'errno-string errno))
+  (%strerror errno))
 
 (define (errno-name errno)
+  (if (not (exact-integer? errno))
+      (srfi-198-error "errno-name requires an exact integer" 'errno-name errno))
   (hash-table-ref errno-map errno))
