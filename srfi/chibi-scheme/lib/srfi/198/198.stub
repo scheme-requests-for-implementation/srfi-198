@@ -97,4 +97,4 @@
 
 ;; Doing this portably and safely is sufficiently obnoxious that this example implementation will punt to strerror
 
-(define-c non-null-string (%strerror strerror) (int))
+(define-c string (%strerror strerror) (int))
