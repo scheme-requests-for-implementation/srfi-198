@@ -12,6 +12,7 @@
           )
 
   (include "198.so")
+  (include "common.scm")
 
   (begin
 
