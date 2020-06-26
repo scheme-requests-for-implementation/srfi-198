@@ -4,6 +4,10 @@
  (plan9)
  (else
   (c-system-include "errno.h")
+  (c-declare "#undef _GNU_SOURCE")
+  (c-declare "#undef _POSIX_C_SOURCE")
+  (c-declare "#define _POSIX_C_SOURCE 200112L")
+  (c-system-include "string.h")
   ))
 
 ;; All POSIX errno defines
@@ -93,3 +97,6 @@
   (define-c-const int (errno/ENOSR "ENOSR"))
   (define-c-const int (errno/ENOSTR "ENOSTR"))
   (define-c-const int (errno/ETIME "ETIME"))))
+
+(define-c errno (%strerror_r strerror_r)
+  (int (result (array char 1024)) (value 1024 int))) ;; should be big enough per GNU/Linux
