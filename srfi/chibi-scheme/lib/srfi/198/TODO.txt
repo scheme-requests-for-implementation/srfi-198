@@ -1,0 +1,5 @@
+Start with new template.
+
+Keep MIT License since this is not a copy of scsh's errno-error.
+
+Check out the new .css, use an example style and plug in boilerplate.
