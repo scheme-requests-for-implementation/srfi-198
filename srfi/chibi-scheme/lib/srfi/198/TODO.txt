@@ -3,3 +3,7 @@ Start with new template.
 Keep MIT License since this is not a copy of scsh's errno-error.
 
 Check out the new .css, use an example style and plug in boilerplate.
+
+Add optional argument to (raise-foreign-error alist) to invoke a
+continuable exception.
+
