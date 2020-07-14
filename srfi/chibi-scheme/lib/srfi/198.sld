@@ -51,9 +51,9 @@
    (scheme base)
 
    (only (srfi 69) make-hash-table hash-table-set! hash-table-ref)
+   (srfi 198 common)
    )
 
   (include-shared "198/198")
-  (include "198/common.scm")
   (include "198/198.scm")
   )

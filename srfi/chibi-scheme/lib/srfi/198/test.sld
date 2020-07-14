@@ -9,10 +9,10 @@
           (chibi test)
 
           (srfi 198)
+          (srfi 198 common)
           )
 
   (include "198.so")
-  (include "common.scm")
 
   (begin
 
@@ -41,9 +41,8 @@
           ;; Make sure the error raising code isn't malfunctioning and raising a different error
           (define the-error #f)
 
-          ;; Lower numbered errnos haven't changed in decades....
           (test-error ((with-exception-handler
-                        (lambda (exception) (if (syscall-error? exception) (set! the-error exception)))
+                        (lambda (exception) (set! the-error exception))
                         (lambda () (errno-error 2 'proc-name 'sc-name 1 2 3 4)))))
           (test-assert (syscall-error? the-error))
           (test 2 (syscall-error:errno the-error))
@@ -52,8 +51,22 @@
           (test 'sc-name (syscall-error:syscall-name the-error))
           (test '(1 2 3 4) (syscall-error:data the-error))
 
+          (test-error ((with-exception-handler
+                        (lambda (exception) (set! the-error exception))
+                        (lambda () (errno-string "not a fixed integer")))))
+          (test-assert (srfi-198-error? the-error))
+          ;; ~~~ examine the-error
           (test-assert (string? (errno-string 2)))
-          (test 'errno/ENOENT (errno-name 2))
+
+          (set! the-error #f)
+          (test-error ((with-exception-handler
+                        (lambda (exception) (set! the-error exception))
+                        (lambda () (errno-string "not a fixed integer")))))
+          (test-assert (srfi-198-error? the-error))
+          ;; ~~~ examine the-error
+          (test 'errno/ENOENT (errno-name 2)) ;; Lower numbered errnos haven't changed in decades....
+
+
 
           ) ;; end errors
 
