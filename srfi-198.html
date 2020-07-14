@@ -2,114 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SRFI 198: POSIX system call exceptions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/srfi.css" type="text/css">
+    <title>SRFI ###: ???title???</title>
     <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
-  </head>
-
+    <link rel="stylesheet" href="https://srfi.schemers.org//srfi.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1"></head>
   <body>
+    <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI logo" /></a>###: ???title???</h1>
 
-<h1>Title</h1>
+<p>by ???author(s)???</p>
 
-POSIX system call exceptions
+<h2>Status</h2>
 
-<h1>Authors</h1>
+??? the draft/final/withdrawn status of the SRFI, information on how
+to subscribe to its mailing list, and important dates in its history.
+The editor will add this section.
 
-John Cowan (editor and shepherd), Harold Ancell (implementer and editor)
+<h2>Abstract</h2>
 
-<h1>Status</h1>
+??? abstract, preferably shorter than 200 words.  Please outline the
+need for, and design of, the proposal.
 
-<h1>Abstract</h1>
+<h2>Issues</h2>
 
-<p>
-When errors in P<small>OSIX</small> system calls are mapped to Scheme exceptions,
-this small SRFI provides the means to construct, signal, and extract
-information from those signals in a reasonably uniform way.
-They are in their own SRFI in order to avoid being tied to any
-single P<small>OSIX</small>-based SRFI such as SRFI 170.
-</p>
+??? Optional section that may point out things to be resolved.  This
+will not appear in the final SRFI.
 
-<h1>Issues</h1>
+<h2>Rationale</h2>
 
-<p>None at present.</p>
+??? detailed rationale.  This should be 200-500 words long.  Please
+explain why the proposal should be incorporated as a standard feature
+in Scheme implementations.  List related standards and SRFIs,
+including dependencies, conflicts, and replacements.  If there are
+other standards which this proposal will replace or with which it will
+compete, please explain why the present proposal is a substantial
+improvement.
 
-<h1>Rationale</h1>
+<h2>Specification</h2>
 
-<p><a href="https://srfi.schemers.org/srfi-170/srfi-170.html">SRFI 170</a>
-procedures never return error codes
-or use an analogue of the P<small>OSIX</small> <code>errno</code>
-variable to indicate system-call-level errors.
-Instead, errors are reported by raising exceptions.</p>
-<p>This frees up the procedures to return useful
-values, and allows the programmer to assume that if a system call
-returns, it succeeded. This greatly simplifies the flow of the code
-from the programmer's point of view.</p>
-<p>In order to allow other SRFIs to use the same mechanism without
-having to import SRFI 170, the constructors, predicate, and accessors
-for system-call-related condition objects are defined here.
-These procedures allow such
-condition objects to be injected, inspected, and detected
-(but not infected, neglected or selected).</p>
+??? detailed specification.  This should be detailed enough that a
+conforming implementation could be completely created from this
+description.
 
-<h1>Specification</h1>
+<h2>Implementation</h2>
 
+??? explanation of how it meets the sample implementation
+requirement (see <a href="srfi-process.html">process</a>), and the
+code, if possible, or a link to it
 
-<h2>Procedures</h2>
-<p>
-<div><code>(make-syscall-error <i>errno message procedure-name syscall-name data</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Return an object representing a syscall error.
-It contains slots for the P<small>OSIX</small> <code>errno</code>,
-a message string, the name of the Scheme procedure that reported the error,
-the C name of the system call that reported the error,
-and a list of arbitrary objects, possibly the arguments to the syscall.</p>
-<div><code>(syscall-error? <i>obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns <code>#t</code> if <em>obj</em> is an object
-representing a syscall error, and <code>#f</code> otherwise.</p>
-<div><code>(syscall-error:errno <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>exact integer</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns the P<small>OSIX</small> error number of the condition object
-<em>syscall-obj</em>.</p>
-<div><code>(syscall-error:message <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns an error message associated with the P<small>OSIX</small>
-error number of the condition object <em>syscall-obj</em>.</p>
-<div><code>(syscall-error:procedure-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns the name of the Scheme procedure reporting this error.</p>
-<div><code>(syscall-error:syscall-name <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns the C name of the P<small>OSIX</small> procedure reporting this error.</p>
-<div><code>(syscall-error:data <i>syscall-obj</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns a list of arbitrary objects associated with 
-the condition object <em>syscall-obj</em>.</p>
-<div><code>(errno-error <i>errno procedure-name syscall-name obj</i> ...)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>does not return</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Constructs a syscall error object <i>s</i>.
-The message field of <i>s</i> should incorporate
-<em>procedure-name</em> (a symbol, the name of the Scheme procedure that called <code>errno-error</code>),
-<em>syscall-name</em> (a symbol, the name of the system call that failed), and
-an error message string associated with <i>errno</i>,
-possibly obtained from the P<small>OSIX</small> <code>strerror</code> function.
-Its exact format is implementation-defined.
-The <i>errno</i> and <i>procedure-name</i> fields of <i>s</i>
-are set from the corresponding arguments,
-and the <i>data</i> field of <i>s</i> from the <i>objs</i>.
-The exception <i>s</i> is then raised with <code>raise</code>
-to make sure that the caller of <code>errno-err</code> cannot
-return normally.</p>
-<div><code>(errno-string <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns an explanatory message associated with the error code <i>errno</i>.
-It can be implemented with P<small>OSIX</small> <code>strerror()</code>.</p>
-<div><code>(errno-name <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</div>
-<p>Returns a symbol associated with the error code <i>errno</i>.
-The uppercase names of these symbols are defined in <code>errno.h</code>.</p>
+<a href="srfi minus ???-sample.scm">Source for the sample implementation.</a>
 
-<h1>Implementation</h1>
-A sample implementation of this SRFI can (not yet) be found in the repository.
-<h1>Acknowledgements</h1>
+<h2>Acknowledgements</h2>
 
-Thanks to Olin Shivers and all the Scheme implementers
-who have followed his work.  Thanks also to all the participants in the
-SRFI 170 and SRFI 198 mailing lists.
+??? credit where it is due
 
-<h1>Copyright</h1>
-Copyright &copy; 2020 by John Cowan.
+<h2>Copyright</h2>
+<p>Copyright &copy; ??? (201?).</p>
 
 <p>
   Permission is hereby granted, free of charge, to any person
@@ -118,54 +65,21 @@ Copyright &copy; 2020 by John Cowan.
   including without limitation the rights to use, copy, modify, merge,
   publish, distribute, sublicense, and/or sell copies of the Software,
   and to permit persons to whom the Software is furnished to do so,
-  subject to the following conditions:
+  subject to the following conditions:</p>
 
 <p>
   The above copyright notice and this permission notice (including the
   next paragraph) shall be included in all copies or substantial
-  portions of the Software.
-
+  portions of the Software.</p>
 <p>
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+  NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  SOFTWARE.
-
-<p>This SRFI is derived from the documentation for
-  <a href="https://scsh.net/">scsh</a>, whose copyright notice, from
-  the <code>COPYING</code> file, is reprinted here:</p>
-
-<blockquote>
-  <p>Copyright (c) 1993-2003 Richard Kelsey and Jonathan Rees</p>
-  <p>Copyright (c) 1994-2003 by Olin Shivers and Brian D. Carlstrom.</p>
-  <p>Copyright (c) 1999-2003 by Martin Gasbichler.</p>
-  <p>Copyright (c) 2001-2003 by Michael Sperber.</p>
-  <p>All rights reserved.</p>
-  <p>Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:</p>
-  <ol><li>Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.</li>
-  <li>Redistributions in binary form must reproduce the above copyright
-     notice, this list of conditions and the following disclaimer in the
-     documentation and/or other materials provided with the distribution.</li>
-  <li>The name of the authors may not be used to endorse or promote products
-     derived from this software without specific prior written permission.</li>
-  </ol>
-  <p>THIS SOFTWARE IS PROVIDED BY THE AUTHORS "AS IS" AND ANY EXPRESS OR
-  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p></blockquote>
+  SOFTWARE.</p>
 
   <hr>
   <address>Editor: <a href="mailto:srfi-editors+at+srfi+dot+schemers+dot+org">Arthur A. Gleckler</a></address></body></html>
