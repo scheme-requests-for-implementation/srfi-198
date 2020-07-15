@@ -85,6 +85,7 @@ point of view.</p>
 <dd>
 <p>Returns #f unless <i>obj</i> is a SRFI 198 error.</p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error? "This is not an foreign-error-object") &rArr; #f
+(foreign-error? (make-foreign-error <i>valid-alist</i>) &rArr; #t
 </pre></td></tr></table>
 </dd>
 </dl>
@@ -102,25 +103,100 @@ point of view.</p>
 </dl>
 <-->
 
+<p>When an error set does not have a concept that corresponds to an error field, its value must be <code>#f</code>.  Implementations on small memory systems could reasonably omit message strings.
+
 <dl>
 <dt> <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
 <p>Partitions the universe of foreign errors into distinct collections based on their source.
 </p>
 
-<p>Suggests error sets:</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:error-set <i>foreign-error-object</i>) &rArr; 'errno
+</pre></td></tr></table>
+
+<p>Typical error sets might include:</p>
 
 <table>
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
-<tr><th>'libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
+<tr><th>'libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
 </table>
+</dd>
+</dl>
 
-<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error: <i>foreign-error-object</i>) &rArr; 'errno
+
+<dt> <code>(foreign-error:code <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> or <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>Many <i>error-sets</i> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error-set</i> should have conventions for this.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:code <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; ((number . 2) (symbol . 'errno/ENOENT)
+(foreign-error:code <i>PostgresSQL-foreign-error-object</i>) &rArr; ((code . '28P01))
+(foreign-error:code <i>libsodium-foreign-error-object</i>) &rArr; #f
 </pre></td></tr></table>
 </dd>
 </dl>
 
+
+<dt> <code>(foreign-error:scheme-procedure <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>The Scheme procedure in which the error object is created.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:scheme-procedure <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; 'open-file
+(foreign-error:scheme-procedure <i>PostgreSQL-foreign-error-object</i>) &rArr; 'open-database-connection
+(foreign-error:scheme-procedure <i>libsodium-foreign-error-object</i>) &rArr; 'generate-key
+</pre></td></tr></table>
+</dd>
+</dl>
+
+
+<dt> <code>(foreign-error:foreign-interface <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>The specific part of the foreign interface that raised an error.  For a library, the name of the library function that was called would be appropriate.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:foreign-interface <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; 'open
+(foreign-error:interface <i>PostgresSQL-wire-foreign-error-object</i>) &rArr; ~~~FIX_ME
+(foreign-error:foreign-interface <i>libsodium-foreign-error-object</i>) &rArr; 'sodium_init
+</pre></td></tr></table>
+</dd>
+</dl>
+
+
+<dt> <code>(foreign-error:message <i>foreign-error-object [locale]</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> or <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>In the construction of the error message, implementers are encouraged to include relevant information from the above fields.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:message <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; "open-file called open: errno/ENOENT: No such file or directory"
+(foreign-error:message <i>foreign-error-object</i>) &rArr; "open-database-connection: ~~~FIX_ME-28P01: ~~~FIX_ME->Incorrect password<-"
+(foreign-error:message <i>foreign-error-object</i>) &rArr; "generate-key: ecb-generate-key could not initialize sodium library"
+~~~FIX_ME add Finnish error messages
+</pre></td></tr></table>
+</dd>
+</dl>
+
+
+<dt> <code>(foreign-error:locales <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list of symbols</i> of <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:locales <i>foreign-error-object</i>) &rArr; ('en_US 'fi_FI)
+</pre></td></tr></table>
+</dd>
+</dl>
+
+
+<dt> <code>(foreign-error:data <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> or <i>#f</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:data <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; (('arguments . ("not-a-valid-filename" 0 428)) ('heritage . "SRFI 170"))
+(foreign-error:data <i>PostgreSQL-foreign-error-object</i>) &rArr; (('arguments . ("localhost" 5432 "ecb" "ecb")))
+(foreign-error:data <i>libsodium-foreign-error-object</i>) &rArr; #f
+</pre></td></tr></table>
+</dd>
+<dd>
+For login functions, you want to omit reporting and logging plaintext passwords.  For cryptographic libraries, the same for secret or private keys, and plaintext data.
+</dd>
+</dl>
 
 
 <h2>Implementation</h2>
