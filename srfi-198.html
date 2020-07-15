@@ -92,23 +92,13 @@ point of view.</p>
 
 <h4>Error field getters</h4>
 
-<!--<dl>
-<dt> <code>(foreign-error: <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
-<dd>
-<p>
-</p>
-<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error: <i>foreign-error-object</i>) &rArr; 
-</pre></td></tr></table>
-</dd>
-</dl>
-<-->
-
 <p>When an error set does not have a concept that corresponds to an error field, its value must be <code>#f</code>.  Implementations on small memory systems could reasonably omit message strings.
 
 <dl>
 <dt> <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
 <p>Partitions the universe of foreign errors into distinct collections based on their source.
+The set <code>'error</code> is reserved for generic errors, particularly sanity error checking before the foreign interface is invoked.
 </p>
 
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:error-set <i>foreign-error-object</i>) &rArr; 'errno
@@ -124,7 +114,6 @@ point of view.</p>
 </dd>
 </dl>
 
-
 <dt> <code>(foreign-error:code <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> or <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
 <p>Many <i>error-sets</i> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error-set</i> should have conventions for this.
@@ -135,7 +124,6 @@ point of view.</p>
 </pre></td></tr></table>
 </dd>
 </dl>
-
 
 <dt> <code>(foreign-error:scheme-procedure <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
@@ -148,7 +136,6 @@ point of view.</p>
 </dd>
 </dl>
 
-
 <dt> <code>(foreign-error:foreign-interface <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
 <p>The specific part of the foreign interface that raised an error.  For a library, the name of the library function that was called would be appropriate.
@@ -160,10 +147,20 @@ point of view.</p>
 </dd>
 </dl>
 
+<dt> <code>(foreign-error:locales <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list of symbols</i> of <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>The locales for which error messages are available.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:locales <i>foreign-error-object</i>) &rArr; ('en_US 'fi_FI)
+</pre></td></tr></table>
+</dd>
+</dl>
 
 <dt> <code>(foreign-error:message <i>foreign-error-object [locale]</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>string</i> or <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
-<p>In the construction of the error message, implementers are encouraged to include relevant information from the above fields.
+<p>The default value for the locale is en_US.  In the construction of
+the error message, implementers are encouraged to include relevant
+information from the above fields, and the data field below.
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:message <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; "open-file called open: errno/ENOENT: No such file or directory"
 (foreign-error:message <i>foreign-error-object</i>) &rArr; "open-database-connection: ~~~FIX_ME-28P01: ~~~FIX_ME->Incorrect password<-"
@@ -172,17 +169,6 @@ point of view.</p>
 </pre></td></tr></table>
 </dd>
 </dl>
-
-
-<dt> <code>(foreign-error:locales <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>list of symbols</i> of <i>#f</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
-<dd>
-<p>
-</p>
-<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:locales <i>foreign-error-object</i>) &rArr; ('en_US 'fi_FI)
-</pre></td></tr></table>
-</dd>
-</dl>
-
 
 <dt> <code>(foreign-error:data <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> or <i>#f</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
 <dd>
@@ -199,19 +185,59 @@ For login functions, you want to omit reporting and logging plaintext passwords.
 </dl>
 
 
+<h4>Error constructors</h4>
+
+<dl>
+<dt> <code>(make-foreign-error <i>alist</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dt> <code>(raise-foreign-error <i>alist [continuable]</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>undefined</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+
+<p>
+These procedures are handed alists, the keys of the pairs being the
+above getters after the colon such as 'message.
+Only <code>'error-set</code> is required, omitted pairs will result in
+the corresponing slots being set to <code>#f</code> except for locale,
+which is generated based on the supplied messages.
+The value for 'message can be either a string, in which case the
+locale defaults to en_US, or an alist with keys for locales, and
+suitable strings in each value.</p>
+
+<p>
+<code>raise-foreign-error</code> takes the <code>foreign-error-object</code>
+returned by <code>make-foreign-error</code> and ideally raises an
+exception in a manner suitable for the Scheme implementation it is
+running on.  If the optional argument <code>continuable</code> is
+not the defaul of <code>#f</code>, it will attempt to raise a
+continuable exception.
+</p>
+
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error: <i>(make-foreign-error '((error-set . error)))</i>) &rArr; <i>error-set-object</i>
+(make-foreign-error '((error-set . errno) (code . (number . 2) (symbol . errno/ENOENT)) (scheme-procedure . open-file) (foreign-interface . open) (message . "open-file called open: errno/ENOENT: No such file or directory") (('arguments . ("not-a-valid-filename" 0 428)) ('heritage . "SRFI 170"))</i>)) &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US)
+(make-foreign-error '((error-set . errno) (code . (number . 2) (symbol . errno/ENOENT)) (scheme-procedure . open-file) (foreign-interface . open) (message . (en_us . "open-file called open: errno/ENOENT: No such file or directory") (fi_FI . "~~~FIX_ME insert Finnish version here")) (('arguments . ("not-a-valid-filename" 0 428)) ('heritage . "SRFI 170"))</i>)) &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US fi_FI)
+(make-foreign-error '((error-set . 'libsodium) (scheme-procedure . generate-key) (foreign-interface . sodium-init) (message . "generate-key: ecb-generate-key could not initialize sodium library")))</i>) &rArr;  <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US)
+(raise-foreign-error '((error-set . error)))</i>) &rArr; <i>undefined</i>
+(raise-foreign-error '((error-set . error))) #f</i>) &rArr; <i>undefined</i>, will attempt to raise a continuable exception.
+</pre></td></tr></table>
+</dd>
+</dl>
+
+
 <h2>Implementation</h2>
 
+<p>
 A sample work in progress implementation of this SRFI can be found in
 the srfi directory of its repository.
+</p>
 
 
 <h2>Acknowledgments</h2>
 
+<p>
 Thanks to Olin Shivers and all the Scheme implementers who have
 followed his work; this SRFI was inspired by scsh's
 <code>errno-error</code> facility.  Thanks also to all the
 participants in the SRFI 170 and SRFI 198 mailing lists.
-
+</p>
 
 <h2>Copyright</h2>
 <p>Copyright &copy; John Cowan, Lassi Kortela, and Harold Ancell (2020).</p>
