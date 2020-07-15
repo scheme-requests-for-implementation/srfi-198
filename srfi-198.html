@@ -62,7 +62,65 @@ point of view.</p>
 
 <h2>Specification</h2>
 
-<p>Under construction.</p>
+<!--
+<dl>
+<dt> <code>(set-errno! <i>errno</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>undefined</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>Sets the current value of <code>errno</code>, where the argument <code><i>errno</i></code> is an exact integer.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(errno) &rArr; 2
+(set-errno! 0)
+(errno) &rArr; 0
+</pre></td></tr></table>
+</dd>
+</dl>
+-->
+
+<h3>Procedures</h3>
+
+<h4>Error predicate</h4>
+
+<dl>
+<dt> <code>(foreign-error? <i>object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>Returns #f unless <i>obj</i> is a SRFI 198 error.</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error? "This is not an foreign-error-object") &rArr; #f
+</pre></td></tr></table>
+</dd>
+</dl>
+
+<h4>Error field getters</h4>
+
+<!--<dl>
+<dt> <code>(foreign-error: <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>alist</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error: <i>foreign-error-object</i>) &rArr; 
+</pre></td></tr></table>
+</dd>
+</dl>
+<-->
+
+<dl>
+<dt> <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)</dt>
+<dd>
+<p>Partitions the universe of foreign errors into distinct collections based on their source.
+</p>
+
+<p>Suggests error sets:</p>
+
+<table>
+<tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
+<tr><th>'libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
+<tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
+</table>
+
+<table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error: <i>foreign-error-object</i>) &rArr; 'errno
+</pre></td></tr></table>
+</dd>
+</dl>
+
 
 
 <h2>Implementation</h2>
