@@ -1,8 +1,6 @@
-Start with new template.
+Add a severity slot??
 
-Keep MIT License since this is not a copy of scsh's errno-error.
-
-Check out the new .css, use an example style and plug in boilerplate.
+Check out the new .css.
 
 Add optional argument to (raise-foreign-error alist) to invoke a
 continuable exception.
