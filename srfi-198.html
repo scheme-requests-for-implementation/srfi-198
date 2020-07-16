@@ -123,7 +123,7 @@ The set <code>'error</code> is reserved for generic errors, particularly sanity 
 Many <em>error-sets</em> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error-set</i> should have conventions for this.
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:code <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; ((number . 2) (c-define . 'errno/ENOENT)
-(foreign-error:code <i>PostgresSQL-foreign-error-object</i>) &rArr; ((code . '28P01))
+(foreign-error:code <i>PostgreSQL-foreign-error-object</i>) &rArr; ((code . '28P01))
 (foreign-error:code <i>libsodium-foreign-error-object</i>) &rArr; #f
 </pre></td></tr></table>
 </dd>
@@ -149,7 +149,7 @@ be <code>#f</code>.
 The specific part of the foreign interface that raised an error.  For a library, the name of the library function that was called would be appropriate.
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:foreign-interface <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; 'open
-(foreign-error:interface <i>PostgresSQL-wire-foreign-error-object</i>) &rArr; ~~~FIX_ME
+(foreign-error:interface <i>PostgreSQL-wire-foreign-error-object</i>) &rArr; ~~~FIX_ME
 (foreign-error:foreign-interface <i>libsodium-foreign-error-object</i>) &rArr; 'sodium_init
 </pre></td></tr></table>
 </dd>
