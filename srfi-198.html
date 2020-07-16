@@ -75,7 +75,7 @@ Returns #f unless <i>object</i> is a SRFI 198 error.
 </p>
 <pre class="example">
 (foreign-error? "This is not an foreign-error-object") &rArr; #f
-(foreign-error? (make-foreign-error &lt;valid-alist&gt;) &rArr; #t
+(foreign-error? (make-foreign-error &lt;valid-alist&gt;)) &rArr; #t
 </pre>
 </blockquote>
 
@@ -96,7 +96,7 @@ Partitions the universe of foreign errors into distinct collections based on the
 The set <code>'error</code> is reserved for generic errors, particularly sanity error checking before the foreign interface is invoked.
 </p>
 <pre class="example">
-(foreign-error:error-set &lt;POSIX-foreign-error-object&gt;) &rArr; 'errno
+(foreign-error:error-set &lt;POSIX-foreign-error-object&gt;) &rArr; errno
 </pre>
 
 <p>
@@ -105,7 +105,7 @@ Example error sets include:
 <table>
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
-<tr><th>'libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
+<tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
 </table>
 </blockquote>
 
@@ -123,7 +123,7 @@ Many <em>error-sets</em> are organized by simple "codes", such as numbers, short
 </pre>
 <pre class="example">
   &rArr; ((number . 2)
-     (c-define . 'errno/ENOENT))
+     (c-define . errno/ENOENT))
 </pre>
 <pre class="example">
 (foreign-error:code &lt;PostgreSQL-foreign-error-object&gt;)
@@ -131,8 +131,8 @@ Many <em>error-sets</em> are organized by simple "codes", such as numbers, short
 <pre class="example">
   &rArr; ((class-number . 28)
      (class-title . "Invalid Authorization Specification")
-     (code . '28P01)
-     (condition-name . 'invalid_password))
+     (code . 28P01)
+     (condition-name . invalid_password))
 </pre>
 <pre class="example">
 (foreign-error:code &lt;libsodium-foreign-error-object&gt;)
@@ -157,19 +157,19 @@ be <code>#f</code>.
 (foreign-error:scheme-procedure &lt;P<small>OSIX</small>-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; 'open-file
+  &rArr; open-file
 </pre>
 <pre class="example">
 (foreign-error:scheme-procedure &lt;PostgreSQL-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; 'open-database-connection
+  &rArr; open-database-connection
 </pre>
 <pre class="example">
 (foreign-error:scheme-procedure &lt;libsodium-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; 'generate-key
+  &rArr; generate-key
 </pre>
 </blockquote>
 
@@ -186,7 +186,7 @@ The specific part of the foreign interface that raised an error.  For a library,
 (foreign-error:foreign-interface &lt;P<small>OSIX</small>-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; 'open
+  &rArr; open
 </pre>
 <pre class="example">
 (foreign-error:interface &lt;PostgreSQL-wire-foreign-error-object&gt;)
@@ -198,7 +198,7 @@ The specific part of the foreign interface that raised an error.  For a library,
 (foreign-error:foreign-interface &lt;libsodium-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; 'sodium_init
+  &rArr; sodium_init
 </pre>
 </pre>
 </blockquote>
@@ -215,7 +215,7 @@ no <code>foreign-error:message</code> (see below), there will be a
 value; by convention, the default is us_EN.
 </p>
 <pre class="example">
-(foreign-error:locales &lt;foreign-error-object&gt;) &rArr; ('en_US 'fi_FI)
+(foreign-error:locales &lt;foreign-error-object&gt;) &rArr; (en_US fi_FI)
 </pre>
 </blockquote>
 
@@ -276,14 +276,14 @@ using the <code>'heritage</code> key.
 (foreign-error:data &lt;P<small>OSIX</small>-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (('arguments . ("not-a-valid-filename" 0 428))
-     ('heritage . "SRFI 170"))
+  &rArr; ((arguments . ("not-a-valid-filename" 0 428))
+     (heritage . "SRFI 170"))
 </pre>
 <pre class="example">
 (foreign-error:data &lt;PostgreSQL-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (('arguments . ("localhost" 5432 "ecb" "ecb")))
+  &rArr; ((arguments . ("localhost" 5432 "ecb" "ecb")))
 </pre>
 <pre class="example">
 (foreign-error:data &lt;libsodium-foreign-error-object&gt;)
@@ -304,7 +304,7 @@ plaintext data.
 <h4>Error constructors</h4>
 
 <div align="left">
-<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i>; &nbsp;&nbsp;&nbsp;(procedure)
+<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
 <div>
 <div align="left">
 <code>(raise-foreign-error <i>alist [continuable]</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
@@ -338,16 +338,16 @@ of <code>#f</code>, it will ideally raise a continuable exception.
 </pre>
 <pre class="example">
 (make-foreign-error '((error-set . errno)
-                      (code . (number . 2)
+                      (code . (number . 2))
                       (symbol . errno/ENOENT))
                       (scheme-procedure . open-file)
                       (foreign-interface . open)
                       (message . "open-file called open: errno/ENOENT: No such file or directory")
-                      (('arguments . ("not-a-valid-filename" 0 428))
-                       ('heritage . "SRFI 170"))))
+                      ((arguments . ("not-a-valid-filename" 0 428))
+                       (heritage . "SRFI 170")))
 </pre>
 <pre class="example">
-  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US)
+  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US)
 </pre>
 <pre class="example">
 (make-foreign-error '((error-set . errno)
@@ -356,29 +356,29 @@ of <code>#f</code>, it will ideally raise a continuable exception.
                       (foreign-interface . open)
                       (message . (en_us . "open-file called open: errno/ENOENT: No such file or directory")
                                  (fi_FI . "~~~FIX_ME insert Finnish version here"))
-                      ('arguments . ("not-a-valid-filename" 0 428))
-                      ('heritage . "SRFI 170")))
+                      (arguments . ("not-a-valid-filename" 0 428))
+                      (heritage . "SRFI 170")))
 </pre>
 <pre class="example">
-  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US fi_FI)
+  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US fi_FI)
 </pre>
 <pre class="example">
-(make-foreign-error '((error-set . 'libsodium)
+(make-foreign-error '((error-set . libsodium)
                       (scheme-procedure . generate-key)
                       (foreign-interface . sodium-init)
                       (message . "generate-key: ecb-generate-key could not initialize sodium library\n")))
 </pre>
 <pre class="example">
-  &rArr;  <i>error-set-object</i> with <code>foreign-interface:locales</code> set to '(en_US)
+  &rArr;  <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US)
 </pre>
 <pre class="example">
-(raise-foreign-error '((error-set . error))))
+(raise-foreign-error '((error-set . error)))
 </pre>
 <pre class="example">
   &rArr; <i>undefined</i>
 </pre>
 <pre class="example">
-(raise-foreign-error '((error-set . error))) #f)
+(raise-foreign-error '((error-set . error)) #f)
 </pre>
 <pre class="example">
   &rArr; <i>undefined</i>, will ideally raise a continuable exception.
