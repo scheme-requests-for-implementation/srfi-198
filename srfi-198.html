@@ -123,7 +123,7 @@ The set <code>'error</code> is reserved for generic errors, particularly sanity 
 Many <em>error-sets</em> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error-set</i> should have conventions for this.
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:code <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; ((number . 2) (c-define . 'errno/ENOENT)
-(foreign-error:code <i>PostgreSQL-foreign-error-object</i>) &rArr; ((code . '28P01))
+(foreign-error:code <i>PostgreSQL-foreign-error-object</i>) &rArr; ((class-number . 28) (class-title . "Invalid Authorization Specification") (code . '28P01) (condition-name . 'invalid_password))
 (foreign-error:code <i>libsodium-foreign-error-object</i>) &rArr; #f
 </pre></td></tr></table>
 </dd>
@@ -179,7 +179,7 @@ Implementations on small memory systems can reasonably omit message
 strings.
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">(foreign-error:message <i>P<small>OSIX</small>-foreign-error-object</i>) &rArr; "open-file called open: errno/ENOENT: No such file or directory"
-(foreign-error:message <i>foreign-error-object</i>) &rArr; "open-database-connection: ~~~FIX_ME-28P01: ~~~FIX_ME->Incorrect password<-"
+(foreign-error:message <i>foreign-error-object</i>) &rArr; "open-database-connection: 28P01: incorrect password"
 (foreign-error:message <i>foreign-error-object</i>) &rArr; "generate-key: ecb-generate-key could not initialize sodium library"
 (foreign-error:message <i>foreign-error-object</i> 'fi_FI)  &rArr; "~~~FIX_ME add one or more Finnish error messages"
 </pre></td></tr></table>
