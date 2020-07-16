@@ -11,10 +11,13 @@
   (message foreign-error:message)
   (data foreign-error:data))
 
-(define (make-foreign-error)
+(define (make-foreign-error the-alist)
   #f
   )
 
-(define (raise-foreign-error)
-  #f
-  )
+(define (raise-foreign-error the-alist . o)
+  (let-optionals o ((continuable #f))
+    (if continuable
+        (raise-continuable (make-foreign-error the-alist))
+        (raise (make-foreign-error the-alist)))))
+

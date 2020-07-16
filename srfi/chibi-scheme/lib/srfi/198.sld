@@ -17,6 +17,7 @@
   (import
    (scheme base)
 
+   (chibi optional) ;; Snow package for optional args
    )
 
   (include "198/198.scm")
