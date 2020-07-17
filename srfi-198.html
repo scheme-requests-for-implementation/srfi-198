@@ -276,14 +276,14 @@ using the <code>'heritage</code> key.
 (foreign-error:data &lt;P<small>OSIX</small>-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; ((arguments . ("not-a-valid-filename" 0 428))
+  &rArr; ((arguments "not-a-valid-filename" 0 428))
      (heritage . "SRFI 170"))
 </pre>
 <pre class="example">
 (foreign-error:data &lt;PostgreSQL-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; ((arguments . ("localhost" 5432 "ecb" "ecb")))
+  &rArr; ((arguments "localhost" 5432 "ecb" "ecb")))
 </pre>
 <pre class="example">
 (foreign-error:data &lt;libsodium-foreign-error-object&gt;)
@@ -355,7 +355,7 @@ of <code>#f</code>, it will ideally raise a continuable exception.
                             (symbol . errno/ENOENT))
                       (scheme-procedure . open-file)
                       (foreign-interface . open)
-                      (message (en_us . "open-file called open: errno/ENOENT: No such file or directory")
+                      (message (en_US . "open-file called open: errno/ENOENT: No such file or directory")
                                (fi_FI . "~~~FIX_ME insert Finnish version here"))
                       (data (arguments . ("not-a-valid-filename" 0 428))
                             (heritage . "SRFI 170"))))
