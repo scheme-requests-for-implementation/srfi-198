@@ -12,7 +12,9 @@
 
 <div>Authors</p>
 
+<p>
 John Cowan, Lassi Kortela, and Harold Ancell
+</p>
 
 
 <h2>Status</h2>
@@ -20,15 +22,19 @@ John Cowan, Lassi Kortela, and Harold Ancell
 
 <h2>Abstract</h2>
 
+<p>
 When errors from Scheme interfaces to "foreign" systems such as the
 P<small>OSIX</small> API, libraries, and databases are detected, this
 SRFI provides the means to construct, return or signal, and extract
 information from those errors in a reasonably uniform way.
+</p>
 
 
 <h2>Issues</h2>
 
-<p>Whether to move localized (l10n, i.e. translated) strings to a future SRFI.</p>
+<p>
+None at present.
+</p>
 
 
 <h2>Rationale</h2>
@@ -40,7 +46,7 @@ ranging from direct Foreign Function Interfaces (FFIs) to low level
 assembler and C libraries, including APIs at that level such as
 P<small>OSIX</small>, to protocols such as TCP/IP, all the way to
 client-server systems such as databases running in their own
-processes.</p>
+seperate processes.</p>
 
 <p>This SRFI provides a comprehensive framework for placing data about
 errors from foreign systems into an object, starting with
@@ -50,7 +56,7 @@ such as 'posix, 'postgresql, and 'libsodium, and to report them.</p>
 <p>Sometimes it will make sense to simply return an error object, but
 an often preferred method is to raise an exception, like
 <a href="https://srfi.schemers.org/srfi-170/srfi-170.html">SRFI
-170</a> in which procedures never return error codes, or use an
+170</a> in which procedures never return error codes, nor use an
 analogue of the P<small>OSIX</small> <code>errno</code> variable to
 indicate system-call-level errors.</p>
 
@@ -74,7 +80,7 @@ point of view.</p>
 Returns #f unless <i>object</i> is a SRFI 198 error.
 </p>
 <pre class="example">
-(foreign-error? "This is not an foreign-error-object") &rArr; #f
+(foreign-error? "This is not an foreign error object") &rArr; #f
 (foreign-error? (make-foreign-error &lt;valid-alist&gt;)) &rArr; #t
 </pre>
 </blockquote>
@@ -102,7 +108,8 @@ The set <code>'error</code> is reserved for generic errors, particularly sanity 
 <p>
 Example error sets include:
 </p>
-<table>
+
+<table> <!-- ~~~FIX_ME formatting of table -->
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
 <tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
@@ -116,7 +123,7 @@ Example error sets include:
 </div>
 <blockquote>
 <p>
-Many <em>error-sets</em> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error-set</i> should have conventions for this.
+Many <em>error sets</em> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error set</i> should have conventions for this.
 </p>
 <pre class="example">
 (foreign-error:code &lt;POSIX-foreign-error-object&gt;)
@@ -151,7 +158,8 @@ Many <em>error-sets</em> are organized by simple "codes", such as numbers, short
 <p>
 The Scheme procedure in which the error object is created.  If there
 is no Scheme code interposed between the the user and a FFI, it can
-be <code>#f</code>.
+be <code>#f</code>.  If the alist argument to create an error is
+malformed, it should be <code>'make-foreign-error</code>.
 </p>
 <pre class="example">
 (foreign-error:scheme-procedure &lt;P<small>OSIX</small>-foreign-error-object&gt;)
@@ -192,7 +200,7 @@ The specific part of the foreign interface that raised an error.  For a library,
 (foreign-error:interface &lt;PostgreSQL-wire-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; ~~~FIX_ME
+  &rArr; query-message
 </pre>
 <pre class="example">
 (foreign-error:foreign-interface &lt;libsodium-foreign-error-object&gt;)
@@ -206,28 +214,11 @@ The specific part of the foreign interface that raised an error.  For a library,
 <br>
 
 <div align="left">
-<code>(foreign-error:locales <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>list of symbols</i> or <i>#f</i> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
-<blockquote>
-<p>
-The locales for which error messages are available.  Unless there is
-no <code>foreign-error:message</code> (see below), there will be a
-value; by convention, the default is us_EN.
-</p>
-<pre class="example">
-(foreign-error:locales &lt;foreign-error-object&gt;) &rArr; (en_US fi_FI)
-</pre>
-</blockquote>
-
-<br>
-
-<div align="left">
-<code>(foreign-error:message <i>foreign-error-object [locale]</i>)</code> &nbsp; &rarr; &nbsp; <i>string</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
+<code>(foreign-error:message <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>string</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
 <p>
 A message suitable for human understanding of the error.
-The default value for the locale is en_US.
 In the construction of the error message, implementers are encouraged
 to include relevant information from the above fields, and the data
 field below.
@@ -241,22 +232,16 @@ strings.
   &rArr; "open-file called open: errno/ENOENT: No such file or directory"
 </pre>
 <pre class="example">
-(foreign-error:message &lt;foreign-error-object&gt;)
+(foreign-error:message &lt;PostgreSQL-foreign-error-object&gt;)
 </pre>
 <pre class="example">
   &rArr; "open-database-connection: 28P01: incorrect password"
 </pre>
 <pre class="example">
-(foreign-error:message &lt;foreign-error-object&gt;)
+(foreign-error:message &lt;ecb-foreign-error-object&gt;)
 </pre>
 <pre class="example">
   &rArr; "generate-key: ecb-generate-key could not initialize sodium library"
-</pre>
-<pre class="example">
-(foreign-error:message &lt;foreign-error-object&gt; 'fi_FI) 
-</pre>
-<pre class="example">
-  &rArr; "~~~FIX_ME add one or more Finnish error messages"
 </pre>
 </blockquote>
 
@@ -312,20 +297,16 @@ plaintext data.
 <blockquote>
 <p>
 These procedures are handed alists, the keys of the pairs being the
-above getters after the colon, like 'message.
+above getters after the colon, like <code>'error-set</code>,
+and <code>'message</code>.
 Only <code>'error-set</code> is required, omitted pairs will result in
-the corresponing slots being set to <code>#f</code> except for locale,
-which is generated based on the supplied messages, and <code>#f</code>
-if there are none.
-The value for <code>'message</code> can be either a string, in which
-case the locale defaults to en_US, or an alist with keys for locales,
-and suitable strings in each value.
+the corresponing slots being set to <code>#f</code>.
 </p>
 <p>
 <code>raise-foreign-error</code> takes the <i>foreign-error-object</i>
 returned by <code>make-foreign-error</code> and raises an exception in
 a manner suitable for the Scheme implementation it is running on.  Its
-actions are at the complete discretion of the Scheme implementation's
+actions are at the complete discretion of that Scheme implementation's
 community.
 If the optional argument <code>continuable</code> is not the default
 of <code>#f</code>, it will ideally raise a continuable exception.
@@ -338,8 +319,8 @@ of <code>#f</code>, it will ideally raise a continuable exception.
 </pre>
 <pre class="example">
 (make-foreign-error '((error-set . errno)
-                      (code . ((number . 2)
-                               (symbol . errno/ENOENT)))
+                      (code .((number . 2)
+                              (symbol . errno/ENOENT)))
                       (scheme-procedure . open-file)
                       (foreign-interface . open)
                       (message . "open-file called open: errno/ENOENT: No such file or directory")
@@ -347,21 +328,7 @@ of <code>#f</code>, it will ideally raise a continuable exception.
                                (heritage . "SRFI 170")))))
 </pre>
 <pre class="example">
-  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US)
-</pre>
-<pre class="example">
-(make-foreign-error '((error-set . errno)
-                      (code . ((number . 2)
-                               (symbol . errno/ENOENT)))
-                      (scheme-procedure . open-file)
-                      (foreign-interface . open)
-                      (message . ((en_US . "open-file called open: errno/ENOENT: No such file or directory")
-                                  (fi_FI . "~~~FIX_ME insert Finnish version here")))
-                      (data . ((arguments . ("not-a-valid-filename" 0 428))
-                               (heritage . "SRFI 170")))))
-</pre>
-<pre class="example">
-  &rArr; <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US fi_FI)
+  &rArr; <i>error-set-object</i>
 </pre>
 <pre class="example">
 (make-foreign-error '((error-set . libsodium)
@@ -370,7 +337,7 @@ of <code>#f</code>, it will ideally raise a continuable exception.
                       (message . "generate-key: ecb-generate-key could not initialize sodium library\n")))
 </pre>
 <pre class="example">
-  &rArr;  <i>error-set-object</i> with <code>foreign-interface:locales</code> set to (en_US)
+  &rArr;  <i>error-set-object</i>
 </pre>
 <pre class="example">
 (raise-foreign-error '((error-set . error)))
@@ -391,8 +358,7 @@ of <code>#f</code>, it will ideally raise a continuable exception.
 
 <p>
 A Chibi Scheme sample implementation of this SRFI can be found in the
-srfi directory of the SRFI's repository.  Because the issue is under
-discussion, it does not impliment the locale features of the API.
+srfi directory of the SRFI's repository.
 </p>
 
 
