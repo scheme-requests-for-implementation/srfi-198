@@ -1,4 +1,4 @@
-* SRFI 198: POSIX system call exceptions
+* SRFI 198: Foreign Interface Error Handling
 
 ** by John Cowan (editor and shepherd), Harold Ancell (implementer and editor), and Lassi Kortela
 
@@ -6,7 +6,7 @@
 
 keywords: [[https://srfi.schemers.org/?keywords=error-handling][Error Handling]], [[https://srfi.schemers.org/?keywords=operating-system][Operating System]]
 
-This repository hosts [[https://srfi.schemers.org/srfi-198/][SRFI 198]]: POSIX system call exceptions, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
+This repository hosts [[https://srfi.schemers.org/srfi-198/][SRFI 198]]: Foreign Interface Error Handling, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
 
 This SRFI is in /draft/ status.
 
