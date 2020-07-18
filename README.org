@@ -1,6 +1,6 @@
 * SRFI 198: POSIX system call exceptions
 
-** by John Cowan (editor and shepherd) and Harold Ancell (implementer and editor)
+** by John Cowan (editor and shepherd), Harold Ancell (implementer and editor), and Lassi Kortela
 
 
 

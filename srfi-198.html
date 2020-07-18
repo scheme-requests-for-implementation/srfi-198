@@ -23,6 +23,7 @@ by John Cowan, Lassi Kortela, and Harold Ancell
   <li>60-day deadline: 2020-08-15</li>
   <li>Draft #1 published: 2020-06-16</li>
   <li>Draft #2 published: 2020-06-24</li>
+  <li>Draft #3 published: 2020-07-18</li>
 </ul>
 
 
@@ -46,13 +47,13 @@ None at present.
 <h2>Rationale</h2>
 
 <p>R6RS and R7RS-large have ambitions to become comprehensive
-ecosystems useful for developing real world applications.  This
+ecosystems useful for developing real-world applications.  This
 necessitates the development of many interfaces to "foreign" systems,
 ranging from direct Foreign Function Interfaces (FFIs) to low level
 assembler and C libraries, including APIs at that level such as
 P<small>OSIX</small>, to protocols such as TCP/IP, all the way to
 client-server systems such as databases running in their own
-seperate processes.</p>
+separate processes.</p>
 
 <p>This SRFI provides a comprehensive framework for placing data about
 errors from foreign systems into an object, starting with
@@ -60,13 +61,13 @@ errors from foreign systems into an object, starting with
 such as 'posix, 'postgresql, and 'libsodium, and to report them.</p>
 
 <p>Sometimes it will make sense to simply return an error object, but
-an often preferred method is to raise an exception, like
+an often preferred method is to raise an exception, as in
 <a href="https://srfi.schemers.org/srfi-170/srfi-170.html">SRFI
-170</a> in which procedures never return error codes, nor use an
+170</a>, in which procedures never return error codes nor use an
 analogue of the P<small>OSIX</small> <code>errno</code> variable to
 indicate system-call-level errors.</p>
 
-<p>Thus procedures can return useful values, and the programmer can to
+<p>Thus procedures can return useful values, and the programmer can
 assume that if a foreign interface procedure returns, it succeeded.
 This greatly simplifies the flow of the code from the programmer's
 point of view.</p>
@@ -78,7 +79,7 @@ point of view.</p>
 
 <h4>Error predicate</h4>
 
-<div align="left">
+<div>
 <code>(foreign-error? <i>object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -99,7 +100,7 @@ When an error set does not have a concept that corresponds to an error field, it
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -118,13 +119,13 @@ Example error sets include:
 <table> <!-- ~~~FIX_ME formatting of table -->
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
-<tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
+<tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
 </table>
 </blockquote>
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:code <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>alist</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -157,7 +158,7 @@ Many <em>error sets</em> are organized by simple "codes", such as numbers, short
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:scheme-procedure <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -189,7 +190,7 @@ malformed, it should be <code>'make-foreign-error</code>.
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:foreign-interface <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -214,21 +215,20 @@ The specific part of the foreign interface that raised an error.  For a library,
 <pre class="example">
   &rArr; sodium_init
 </pre>
-</pre>
 </blockquote>
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:message <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>string</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
 <p>
 A message suitable for human understanding of the error.
 In the construction of the error message, implementers are encouraged
-to include relevant information from the above fields, and the data
+to include relevant information from the above fields and the data
 field below.
-Implementations on small memory systems can reasonably omit message
+Implementations on small-memory systems can reasonably omit message
 strings.
 </p>
 <pre class="example">
@@ -253,7 +253,7 @@ strings.
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:data <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>alist</i> or <code>#f</code>&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -285,8 +285,8 @@ using the <code>'heritage</code> key.
 <p>
 For login functions, you want to omit reporting and logging plaintext
 passwords, and login names are also dangerous because users will
-sometimes accidently enter their password first.
-For cryptographic libraries, the same for secret and private keys, and
+sometimes accidentally enter their password first.
+For cryptographic libraries, the same for secret and private keys and
 plaintext data.
 </p>
 </blockquote>
@@ -294,10 +294,10 @@ plaintext data.
 
 <h4>Error constructors</h4>
 
-<div align="left">
-<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
 <div>
-<div align="left">
+<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
+</div>
+<div>
 <code>(raise-foreign-error <i>alist [continuable]</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -305,8 +305,8 @@ plaintext data.
 These procedures are handed alists, the keys of the pairs being the
 above getters after the colon, like <code>'error-set</code>,
 and <code>'message</code>.
-Only <code>'error-set</code> is required, omitted pairs will result in
-the corresponing slots being set to <code>#f</code>.
+Only <code>'error-set</code> is required.  Omitted pairs will result in
+the corresponding slots being set to <code>#f</code>.
 </p>
 <p>
 <code>raise-foreign-error</code> takes the <i>foreign-error-object</i>
