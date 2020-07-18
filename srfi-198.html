@@ -52,7 +52,7 @@ ranging from direct Foreign Function Interfaces (FFIs) to low level
 assembler and C libraries, including APIs at that level such as
 P<small>OSIX</small>, to protocols such as TCP/IP, all the way to
 client-server systems such as databases running in their own
-seperate processes.</p>
+separate processes.</p>
 
 <p>This SRFI provides a comprehensive framework for placing data about
 errors from foreign systems into an object, starting with
@@ -118,7 +118,7 @@ Example error sets include:
 <table> <!-- ~~~FIX_ME formatting of table -->
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
-<tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptograpghy library</a></th></tr>
+<tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
 </table>
 </blockquote>
 
@@ -284,7 +284,7 @@ using the <code>'heritage</code> key.
 <p>
 For login functions, you want to omit reporting and logging plaintext
 passwords, and login names are also dangerous because users will
-sometimes accidently enter their password first.
+sometimes accidentally enter their password first.
 For cryptographic libraries, the same for secret and private keys, and
 plaintext data.
 </p>
@@ -305,7 +305,7 @@ These procedures are handed alists, the keys of the pairs being the
 above getters after the colon, like <code>'error-set</code>,
 and <code>'message</code>.
 Only <code>'error-set</code> is required, omitted pairs will result in
-the corresponing slots being set to <code>#f</code>.
+the corresponding slots being set to <code>#f</code>.
 </p>
 <p>
 <code>raise-foreign-error</code> takes the <i>foreign-error-object</i>
