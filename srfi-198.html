@@ -78,7 +78,7 @@ point of view.</p>
 
 <h4>Error predicate</h4>
 
-<div align="left">
+<div>
 <code>(foreign-error? <i>object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -99,7 +99,7 @@ When an error set does not have a concept that corresponds to an error field, it
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -124,7 +124,7 @@ Example error sets include:
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:code <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>alist</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -157,7 +157,7 @@ Many <em>error sets</em> are organized by simple "codes", such as numbers, short
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:scheme-procedure <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -189,7 +189,7 @@ malformed, it should be <code>'make-foreign-error</code>.
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:foreign-interface <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -214,12 +214,11 @@ The specific part of the foreign interface that raised an error.  For a library,
 <pre class="example">
   &rArr; sodium_init
 </pre>
-</pre>
 </blockquote>
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:message <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>string</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -253,7 +252,7 @@ strings.
 
 <br>
 
-<div align="left">
+<div>
 <code>(foreign-error:data <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>alist</i> or <code>#f</code>&nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
@@ -294,10 +293,10 @@ plaintext data.
 
 <h4>Error constructors</h4>
 
-<div align="left">
-<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
 <div>
-<div align="left">
+<code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
+</div>
+<div>
 <code>(raise-foreign-error <i>alist [continuable]</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
 </div>
 <blockquote>
