@@ -1,7 +1,7 @@
 ;; please see copyright notice in ./COPYING
 
 (define-record-type Foreign-Interface-Error
-    (make-foreign-interface-error-error error-set code scheme-procedure foreign-interface locales message data)
+    (make-foreign-interface-error-record error-set code scheme-procedure foreign-interface locales message data)
     foreign-error?
   (error-set foreign-error:error-set)
   (code foreign-error:code)
