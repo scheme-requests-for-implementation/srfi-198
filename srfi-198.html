@@ -46,7 +46,7 @@ None at present.
 <h2>Rationale</h2>
 
 <p>R6RS and R7RS-large have ambitions to become comprehensive
-ecosystems useful for developing real world applications.  This
+ecosystems useful for developing real-world applications.  This
 necessitates the development of many interfaces to "foreign" systems,
 ranging from direct Foreign Function Interfaces (FFIs) to low level
 assembler and C libraries, including APIs at that level such as
@@ -60,13 +60,13 @@ errors from foreign systems into an object, starting with
 such as 'posix, 'postgresql, and 'libsodium, and to report them.</p>
 
 <p>Sometimes it will make sense to simply return an error object, but
-an often preferred method is to raise an exception, like
+an often preferred method is to raise an exception, as in
 <a href="https://srfi.schemers.org/srfi-170/srfi-170.html">SRFI
-170</a> in which procedures never return error codes, nor use an
+170</a>, in which procedures never return error codes nor use an
 analogue of the P<small>OSIX</small> <code>errno</code> variable to
 indicate system-call-level errors.</p>
 
-<p>Thus procedures can return useful values, and the programmer can to
+<p>Thus procedures can return useful values, and the programmer can
 assume that if a foreign interface procedure returns, it succeeded.
 This greatly simplifies the flow of the code from the programmer's
 point of view.</p>
@@ -225,9 +225,9 @@ The specific part of the foreign interface that raised an error.  For a library,
 <p>
 A message suitable for human understanding of the error.
 In the construction of the error message, implementers are encouraged
-to include relevant information from the above fields, and the data
+to include relevant information from the above fields and the data
 field below.
-Implementations on small memory systems can reasonably omit message
+Implementations on small-memory systems can reasonably omit message
 strings.
 </p>
 <pre class="example">
@@ -285,7 +285,7 @@ using the <code>'heritage</code> key.
 For login functions, you want to omit reporting and logging plaintext
 passwords, and login names are also dangerous because users will
 sometimes accidentally enter their password first.
-For cryptographic libraries, the same for secret and private keys, and
+For cryptographic libraries, the same for secret and private keys and
 plaintext data.
 </p>
 </blockquote>
@@ -304,7 +304,7 @@ plaintext data.
 These procedures are handed alists, the keys of the pairs being the
 above getters after the colon, like <code>'error-set</code>,
 and <code>'message</code>.
-Only <code>'error-set</code> is required, omitted pairs will result in
+Only <code>'error-set</code> is required.  Omitted pairs will result in
 the corresponding slots being set to <code>#f</code>.
 </p>
 <p>
