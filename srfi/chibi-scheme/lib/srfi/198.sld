@@ -18,6 +18,8 @@
    (scheme base)
 
    (chibi optional) ;; Snow package for optional args
+
+   (only (srfi 1) alist-cons)
    )
 
   (include "198/198.scm")

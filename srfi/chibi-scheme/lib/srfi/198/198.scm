@@ -11,13 +11,39 @@
   (message foreign-error:message)
   (data foreign-error:data))
 
+
+(define (make-malformed-foreign-error-alist original-argument the-message)
+  (alist-cons 'message
+              the-message
+              (alist-cons 'data
+                          (cons 'arguments original-argument)
+                          '((error-set . error)
+                            (scheme-procedure . make-foreign-error)))))
+
+(define (alist-or-#f the-key the-alist)
+  (let ((the-sub-alist (assq the-key the-alist)))
+    (if the-sub-alist
+        (cdr the-sub-alist)
+        the-sub-alist)))
+
 (define (make-foreign-error the-alist)
-  #f
-  )
+  (cond ((not (pair? the-alist))
+         (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not a list; see data for details")))
+        ((not (pair? (cdr the-alist)))
+         (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not an alist; see data for details")))
+        (else (let ((the-error-set (assq 'error-set the-alist)))
+                (if (not the-error-set)
+                    (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, missing error-set; see data for details"))
+                    (make-foreign-interface-error-record (cdr the-error-set)
+                                                         (alist-or-#f 'code the-alist)
+                                                         (alist-or-#f 'scheme-procedure the-alist)
+                                                         (alist-or-#f 'foreign-interface the-alist)
+                                                         #f ;; Maybe ~~~FIX_ME Initial locale ignorant versions
+                                                         (alist-or-#f 'message the-alist)
+                                                         (alist-or-#f 'data the-alist)))))))
 
 (define (raise-foreign-error the-alist . o)
   (let-optionals o ((continuable #f))
     (if continuable
         (raise-continuable (make-foreign-error the-alist))
         (raise (make-foreign-error the-alist)))))
-
