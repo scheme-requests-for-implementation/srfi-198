@@ -1,3 +1,8 @@
+For each release:
+
+ * Fix errors reported by W3C HTML Validator.
+ * Fix spelling.
+
 Add a severity slot??
 
 Check out the new .css.
