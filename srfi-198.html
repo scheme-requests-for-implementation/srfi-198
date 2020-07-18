@@ -319,8 +319,8 @@ of <code>#f</code>, it will ideally raise a continuable exception.
 </pre>
 <pre class="example">
 (make-foreign-error '((error-set . errno)
-                      (code .((number . 2)
-                              (symbol . errno/ENOENT)))
+                      (code . ((number . 2)
+                               (symbol . errno/ENOENT)))
                       (scheme-procedure . open-file)
                       (foreign-interface . open)
                       (message . "open-file called open: errno/ENOENT: No such file or directory")
