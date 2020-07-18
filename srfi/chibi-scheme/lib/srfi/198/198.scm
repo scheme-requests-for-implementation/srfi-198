@@ -1,13 +1,12 @@
 ;; please see copyright notice in ./COPYING
 
 (define-record-type Foreign-Interface-Error
-    (make-foreign-interface-error-record error-set code scheme-procedure foreign-interface locales message data)
+    (make-foreign-interface-error-record error-set code scheme-procedure foreign-interface message data)
     foreign-error?
   (error-set foreign-error:error-set)
   (code foreign-error:code)
   (scheme-procedure foreign-error:scheme-procedure)
   (foreign-interface foreign-error:foreign-interface)
-  (locales foreign-error:locales)
   (message foreign-error:message)
   (data foreign-error:data))
 
@@ -16,7 +15,7 @@
   (alist-cons 'message
               the-message
               (alist-cons 'data
-                          (cons 'arguments original-argument)
+                          (alist-cons 'arguments original-argument '())
                           '((error-set . error)
                             (scheme-procedure . make-foreign-error)))))
 
@@ -29,7 +28,7 @@
 (define (make-foreign-error the-alist)
   (cond ((not (pair? the-alist))
          (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not a list; see data for details")))
-        ((not (pair? (cdr the-alist)))
+        ((not (pair? (car the-alist)))
          (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not an alist; see data for details")))
         (else (let ((the-error-set (assq 'error-set the-alist)))
                 (if (not the-error-set)
@@ -38,7 +37,6 @@
                                                          (alist-or-#f 'code the-alist)
                                                          (alist-or-#f 'scheme-procedure the-alist)
                                                          (alist-or-#f 'foreign-interface the-alist)
-                                                         #f ;; Maybe ~~~FIX_ME Initial locale ignorant versions
                                                          (alist-or-#f 'message the-alist)
                                                          (alist-or-#f 'data the-alist)))))))
 

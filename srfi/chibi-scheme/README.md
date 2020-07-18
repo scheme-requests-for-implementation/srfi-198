@@ -14,12 +14,14 @@ bash to make the example SRFI implementation:
 
 CHIBI_LOCATION_PATH=/home/src/chibi-scheme gmake
 
-To run with all paths set correctly, from srfi/chibi-scheme off the
-top repo directory, execute somethin like this:
+To run a REPL with all paths set correctly, and automatically loading
+the library, with current directory of srfi/chibi-scheme off the top
+repo directory, either do a "make repl", or execute something like:
 
 LD_LIBRARY_PATH="/usr/local/src/chibi-scheme:." DYLD_LIBRARY_PATH="/usr/local/src/chibi-scheme:." CHIBI_IGNORE_SYSTEM_PATH=1 CHIBI_MODULE_PATH="/usr/local/src/chibi-scheme/lib:./lib" /usr/local/src/chibi-scheme/chibi-scheme -m "(srfi 198)"
 
-To run the tests, either do a "make test", or:
+To run the tests, starting from the above location, either do a "make
+test", or:
 
 LD_LIBRARY_PATH="/usr/local/src/chibi-scheme:." DYLD_LIBRARY_PATH="/usr/local/src/chibi-scheme:." CHIBI_IGNORE_SYSTEM_PATH=1 CHIBI_MODULE_PATH="/usr/local/src/chibi-scheme/lib:./lib" /usr/local/src/chibi-scheme/chibi-scheme -m "(srfi 198 test)" -e "(run-tests)"
 

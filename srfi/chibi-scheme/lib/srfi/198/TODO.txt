@@ -1,9 +1,3 @@
 Add a severity slot??
 
 Check out the new .css.
-
-Add optional argument to (raise-foreign-error alist) to invoke a
-continuable exception.
-
-"What raising an exception, continuable or not means is left entirely
-up to the implementer."

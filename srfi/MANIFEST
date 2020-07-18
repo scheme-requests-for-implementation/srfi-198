@@ -3,17 +3,18 @@ MANIFEST (this file)
 Chibi Scheme sample implementation:
 
 chibi-scheme/Makefile
-chibi-scheme/Makefile.libs
 chibi-scheme/README.md
 chibi-scheme/lib/srfi/198.sld
 chibi-scheme/lib/srfi/198/198.stub
 chibi-scheme/lib/srfi/198/COPYING
 chibi-scheme/lib/srfi/198/test.sld
+chibi-scheme/lib/srfi/198/TODO.txt
 
-System independent sample implementation:
+System independent sample implementation work:
 
-198/cygwin.inc
-198/freebsd.inc
-198/linux.inc
-198/macosx.inc
-198/openbsd.inc
+artifacts/cygwin.inc
+artifacts/freebsd.inc
+artifacts/linux.inc
+artifacts/macosx.inc
+artifacts/openbsd.inc
+artifacts/posix-errors

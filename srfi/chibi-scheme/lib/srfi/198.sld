@@ -6,9 +6,9 @@
    foreign-error?
 
    foreign-error:error-set foreign-error:code
-   foreign-error:scheme-procedure foreign-error:foreign-interface
-   foreign-error:locales foreign-error:message
-   foreign-error:data
+   foreign-error:scheme-procedure
+   foreign-error:foreign-interface
+   foreign-error:message foreign-error:data
 
    make-foreign-error
    raise-foreign-error
