@@ -58,8 +58,16 @@
           (test #f (foreign-error:code the-error))
           (test 'make-foreign-error (foreign-error:scheme-procedure the-error))
           (test #f (foreign-error:foreign-interface the-error))
-          (test "Malformed call to make-foreign-error, missing error-set; see data for details" (foreign-error:message the-error))
+          (test "Malformed call to make-foreign-error, first key must be a symbol; see data for details" (foreign-error:message the-error))
           (test '((arguments (1 . 1))) (foreign-error:data the-error))
+
+          (set! the-error (make-foreign-error '((foo . 1))))
+          (test 'error (foreign-error:error-set the-error))
+          (test #f (foreign-error:code the-error))
+          (test 'make-foreign-error (foreign-error:scheme-procedure the-error))
+          (test #f (foreign-error:foreign-interface the-error))
+          (test "Malformed call to make-foreign-error, missing error-set; see data for details" (foreign-error:message the-error))
+          (test '((arguments (foo . 1))) (foreign-error:data the-error))
 
           (set! the-error (make-foreign-error '((error-set . error))))
           (test 'error (foreign-error:error-set the-error))
