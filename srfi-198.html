@@ -79,9 +79,7 @@ point of view.</p>
 
 <h4>Error predicate</h4>
 
-<div>
 <code>(foreign-error? <i>object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>boolean</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 Returns #f unless <i>object</i> is a SRFI 198 error.
@@ -100,9 +98,7 @@ When an error set does not have a concept that corresponds to an error field, it
 
 <br>
 
-<div>
 <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 Partitions the universe of foreign errors into distinct collections based on their source.
@@ -125,9 +121,7 @@ Example error sets include:
 
 <br>
 
-<div>
 <code>(foreign-error:code <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>alist</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 Many <em>error sets</em> are organized by simple "codes", such as numbers, short alphanumeric designations that should be represented as symbols, etc.  Each <i>error set</i> should have conventions for this.
@@ -158,9 +152,7 @@ Many <em>error sets</em> are organized by simple "codes", such as numbers, short
 
 <br>
 
-<div>
 <code>(foreign-error:scheme-procedure <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 The Scheme procedure in which the error object is created.  If there
@@ -190,9 +182,7 @@ malformed, it should be <code>'make-foreign-error</code>.
 
 <br>
 
-<div>
 <code>(foreign-error:foreign-interface <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>symbol</i> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 The specific part of the foreign interface that raised an error.  For a library, the name of the library function that was called would be appropriate.
@@ -219,9 +209,7 @@ The specific part of the foreign interface that raised an error.  For a library,
 
 <br>
 
-<div>
 <code>(foreign-error:message <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>string</i> or <code>#f</code> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 A message suitable for human understanding of the error.
@@ -253,9 +241,7 @@ strings.
 
 <br>
 
-<div>
 <code>(foreign-error:data <i>foreign-error-object</i>)</code> &nbsp; &rarr; &nbsp; <i>alist</i> or <code>#f</code>&nbsp;&nbsp;&nbsp;(procedure)
-</div>
 <blockquote>
 <p>
 Any additional data relevant to the error.  It is <em>strongly</em>
@@ -294,12 +280,12 @@ plaintext data.
 
 <h4>Error constructors</h4>
 
-<div>
+<p>
 <code>(make-foreign-error <i>alist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-error-object</i> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
-<div>
+</p>
+<p>
 <code>(raise-foreign-error <i>alist [continuable]</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
-</div>
+</p>
 <blockquote>
 <p>
 These procedures are handed alists, the keys of the pairs being the
