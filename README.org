@@ -1,6 +1,6 @@
 * SRFI 198: Foreign Interface Error Handling
 
-** by John Cowan (editor and shepherd), Harold Ancell (implementer and editor), and Lassi Kortela
+** by John Cowan (editor and shepherd), Harold Ancell (implementer and editor), and Lassi Kortela (architect)
 
 
 
