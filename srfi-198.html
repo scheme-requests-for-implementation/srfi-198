@@ -101,8 +101,11 @@ When an error set does not have a concept that corresponds to an error field, it
 <code>(foreign-error:error-set <i>foreign-error-object</i>)</code> &nbsp;&nbsp;&nbsp;&rarr; &nbsp;&nbsp;&nbsp;<i>symbol</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 <blockquote>
 <p>
-Partitions the universe of foreign errors into distinct collections based on their source.
-The set <code>'error</code> is reserved for generic errors, particularly sanity error checking before the foreign interface is invoked.
+Partitions the universe of foreign errors into distinct collections
+based on their source.
+The set <code>'error</code> is reserved for generic errors,
+particularly sanity error checking before the foreign interface is
+invoked.
 </p>
 <pre class="example">
 (foreign-error:error-set &lt;POSIX-foreign-error-object&gt;) &rArr; errno
@@ -117,6 +120,16 @@ Example error sets include:
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">PostgreSQL errors</a></th></tr>
 <tr><th>libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
 </table>
+
+<p>
+P<small>OSIX</small> errnos are a generally familiar error system with
+a moderate degree of structure, and the initial inspiration for this
+SRFI.  PostgreSQL is a representative SQL RDBMS with a richer set of
+error data that can be transmitted to the user, and its client/server
+organization is a useful counterpoint to getting an error through a
+FFI.  libsodium has a typical simple UNIX&trade; style C API that
+returns 0 on success and -1 on error, and nothing more.
+<p>
 </blockquote>
 
 <br>
