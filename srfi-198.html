@@ -332,6 +332,20 @@ passwords, and login names are also dangerous because users will
 sometimes accidentally enter their password first.
 For cryptographic libraries, the same for secret and private keys and
 plaintext data.
+<li>
+<code>inner</code>:
+For nesting of a lower level status object.
+</li>
+<li>
+<code>source-filename</code>:
+A string containing a filename that contained the source code that
+generated the status.
+</li>
+<li>
+<code>line-number</code>:
+The line number in the above <code>'source-filename</code> of the
+beginning of the call to <code>make-foreign-status</code> or
+<code>raise-foreign-error</code>.
 </li>
 </ul>
 
