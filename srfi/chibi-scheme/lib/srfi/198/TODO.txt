@@ -9,11 +9,41 @@ Check out the new .css.
 
 ----------------
 
-Consider adding miscellaneous scsh procedures per
-https://srfi-email.schemers.org/srfi-205/msg/14647343/
+From: Lassi Kortela <lassi@lassi.io>
+Message-ID: <ade30446-0836-5577-fc9c-35433e39af1a@lassi.io>
+Date: Tue, 28 Jul 2020 16:02:49 +0300
 
- * (open-control-tty tty-name [flags])
- * (become-session-leader)
- * (tty-process-group fd/port/fname)
- * (set-tty-process-group fd/port/fname pgrp)
- * (control-tty-file-name)
+The following is a full sample implementation of the SRFI with the 
+changes discussed in this thread. There are probably subtle bugs. I left 
+out `raise-continuable-foreign-error` and `foreign-error->string`.
+
+(define-library (srfi 198)
+   (export make-foreign-error raise-foreign-error
+           foreign-error? foreign-error-ref)
+   (import (scheme base) (srfi 69))
+   (begin
+
+     (define-record-type foreign-error
+       (%make-foreign-error table)
+       foreign-error?
+       (table %foreign-error-table))
+
+     (define (make-foreign-error . plist)
+       (let ((table (make-hash-table)))
+         (let loop ((tail plist))
+           (cond ((null? tail)
+                  (%make-foreign-error table))
+                 ((and (pair? tail) (symbol? (car tail)) (pair? (cdr tail)))
+                  (hash-table-set! table (car tail) (cadr tail))
+                  (loop (cddr tail)))
+                 (else (error "Malformed property list" plist))))))
+
+     (define (raise-foreign-error . plist)
+       (raise (apply make-foreign-error plist)))
+
+     (define (foreign-error-ref ferr property . args)
+       (let* ((table (%foreign-error-table ferr))
+              (value (hash-table-ref/default table property #f)))
+         (if (procedure? value) (apply value args) value)))))
+
+
