@@ -13,8 +13,8 @@ From: Lassi Kortela <lassi@lassi.io>
 Message-ID: <ade30446-0836-5577-fc9c-35433e39af1a@lassi.io>
 Date: Tue, 28 Jul 2020 16:02:49 +0300
 
-The following is a full sample implementation of the SRFI with the 
-changes discussed in this thread. There are probably subtle bugs. I left 
+The following is a full sample implementation of the SRFI with the
+changes discussed in this thread. There are probably subtle bugs. I left
 out `raise-continuable-foreign-error` and `foreign-error->string`.
 
 (define-library (srfi 198)
@@ -46,4 +46,31 @@ out `raise-continuable-foreign-error` and `foreign-error->string`.
               (value (hash-table-ref/default table property #f)))
          (if (procedure? value) (apply value args) value)))))
 
+----------------
+
+John's high level localization proposal:
+
+We, or at least I, have been thinking in terms of localizing the
+message and potentially other properties.  What if we did localize the
+whole status object?
+
+(foreign-status-localize foreign-status language-tag)
+
+returns a new foreign-status object, this one with all localizable
+properties localized to according to the language-tag (a string).
+
+That way we can (for the moment, at least) forget about lambda
+properties and all those complexities.  The procedure looks at the
+status-type (new suggested name for error-set), calls on whatever
+localization facilities it has, substitutes the local messages for the
+universal ones, and off we go.  Of course if you don't *want*
+localized messages, you don't have to call this.  And if your
+implementation knows nothing of that type, it just returns its
+argument.
+
+(register-foreign-status-type status-type proc)
+
+This registers a localizer procedure for the status-type.
+
+----------------
 
