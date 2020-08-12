@@ -51,7 +51,21 @@ by foreign-status-ref, and alternatively, how to retrieve them.
 </li>
 <li>
 The exact set of "standard" keys to be defined in the "Standard status
-set conventions" section.
+set conventions" section:
+</li>
+<li>
+Should the standard key 'message be replaced by the shorter 'text?
+</li>
+<li>
+Should 'source-filename, 'line-number, and 'column-number be in the
+SRFI's list of standard keys, or in Schemeregistry.  They increase its
+surface by 50%.
+</li>
+<li>
+Should 'foreign-interface-args be added as a standard key?  It raises
+the issue of translating foreign interface types back into Scheme
+types, but that could be finessed, perhaps by converting everything
+non-obvious to strings.
 </li>
 </ul>
 
@@ -181,6 +195,8 @@ with <i>key</i> , or <code>#f</code> if <i>key</i> is not in the object.
 (foreign-status-ref &lt;POSIX-foreign-error-object&gt; 'set) &rArr; errno
 </pre>
 </blockquote>
+
+<br>
 
 <code>(foreign-status-keys <i>foreign-status-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>list</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 <blockquote>
@@ -346,6 +362,10 @@ generated the status.
 The line number in the above <code>'source-filename</code> of the
 beginning of the call to <code>make-foreign-status</code> or
 <code>raise-foreign-error</code>.
+</li>
+<li>
+<code>column-number</code>:
+The column in the line-number above.
 </li>
 </ul>
 
