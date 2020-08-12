@@ -197,7 +197,7 @@ Returns all the keys in a foreign status object in a list.
 (foreign-status-keys &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (set SQLSTATE category class-text condition-name scheme-procedure foreign-interface message args)
+  &rArr; (set sqlstate category class-text condition-name scheme-procedure foreign-interface message args)
 </pre>
 <pre class="example">
 (foreign-status-keys &lt;libsodium-foreign-status-object&gt;)
@@ -259,7 +259,7 @@ a manner suitable for the Scheme implementation it is running on.
 <pre class="example">
 (make-foreign-status
   '(set postgresql
-    SQLSTATE 28P01
+    'sqlstate "28P01"
     category exception
     class-text "Invalid Authorization Specification"
     condition-name invalid_password
