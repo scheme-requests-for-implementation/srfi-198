@@ -143,7 +143,7 @@ Example facilities include:
 <table class="t1">
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
 <tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">The PostgreSQL database</a></th></tr>
-<tr><th>'generic-unix-lib</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
+<tr><th>'generic-c-lib</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
 </table>
 
 <p>
@@ -154,7 +154,7 @@ status data that can be transmitted to the user, and its client/server
 organization is a useful counterpoint to getting an error through a
 FFI.  libsodium has a typical simple UNIX&trade; style C API that
 returns 0 on success and -1 on error, with no inherent structure.
-The generic-unix-lib facility is suitable for many of these libraries.
+The generic-c-lib facility is suitable for many of these libraries.
 <p>
 
 <p>
@@ -261,7 +261,7 @@ It is an error to mutate the plist.
 (foreign-status-plist &lt;libsodium-foreign-status-object&gt;)
 </pre>
 <pre class="example">
- &rArr; (facility generic-unix-lib
+ &rArr; (facility generic-c-lib
     scheme-procedure generate-key
     foreign-interface sodium-init
     message "generate-key: ecb-generate-key could not initialize sodium library\n")
@@ -323,7 +323,7 @@ a manner suitable for the Scheme implementation it is running on.
 </pre>
 <pre class="example">
 (make-foreign-status
-  generic-unix-lib
+  generic-c-lib
   '(scheme-procedure generate-key
     foreign-interface sodium-init
     message "generate-key: ecb-generate-key could not initialize sodium library\n")
