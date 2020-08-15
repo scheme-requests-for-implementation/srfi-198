@@ -1,11 +1,15 @@
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/hga/srfi-198/master/srfi-198.html
+
 For each release:
 
  * Fix errors reported by W3C HTML Validator.
  * Fix spelling.
 
-Add a severity slot??
-
 Check out the new .css.
+
+----------------
+
+Add a severity key/value pair?
 
 ----------------
 
