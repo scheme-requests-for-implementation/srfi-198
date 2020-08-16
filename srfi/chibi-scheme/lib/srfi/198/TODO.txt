@@ -9,6 +9,15 @@ Check out the new .css.
 
 ----------------
 
+Add this text from Marc for the raise procedure:
+
+(A) In an R6RS or R7RS system or in a system support SRFI 18, raising
+an exception means to call "raise" on the exception.
+(B) In a system just supporting SRFI 23, raising an exception means
+calling "error" with "message" and "irritants" as follows: ...
+
+----------------
+
 Add a severity key/value pair?
 
 ----------------
