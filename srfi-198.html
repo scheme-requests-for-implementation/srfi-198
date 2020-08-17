@@ -310,6 +310,16 @@ value of the <code>'args</code> key, and supply an informative
 <code>raise-foreign-error</code> constructs a <i>foreign-error-object</i>
 like <code>make-foreign-status</code>, and raises an exception in
 a manner suitable for the Scheme implementation it is running on.
+In a R6RS or R7RS system following
+<a href="https://srfi.schemers.org/srfi-35/srfi-35.html">SRFI 35</a>,
+or in a system supporting
+<a href="https://srfi.schemers.org/srfi-18/srfi-18.html">SRFI 18</a>,
+raising an exception means to call <code>raise</code> on the object.
+In a system only supporting
+<a href="https://srfi.schemers.org/srfi-23/srfi-23.html">SRFI 23</a>,
+raising an exception means calling <code>error</code> with a
+<code><i>reason</i></code> string and <code></i>irritants</i></code>
+following it.
 </p>
 <pre class="example">
 (make-foreign-status 'status '()))
