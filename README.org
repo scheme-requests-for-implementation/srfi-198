@@ -1,4 +1,4 @@
-* SRFI 198: Foreign Interface Error Handling
+* SRFI 198: Foreign Interface Status
 
 ** by John Cowan (editor and shepherd), Harold Ancell (implementer and editor), and Lassi Kortela (architect)
 
@@ -6,7 +6,7 @@
 
 keywords: [[https://srfi.schemers.org/?keywords=error-handling][Error Handling]], [[https://srfi.schemers.org/?keywords=operating-system][Operating System]]
 
-This repository hosts [[https://srfi.schemers.org/srfi-198/][SRFI 198]]: Foreign Interface Error Handling, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
+This repository hosts [[https://srfi.schemers.org/srfi-198/][SRFI 198]]: Foreign Interface Status, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
 
 This SRFI is in /draft/ status.
 
