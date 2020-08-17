@@ -5,7 +5,37 @@
     <title>SRFI 198: Foreign Interface Status</title>
     <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
     <link rel="stylesheet" href="https://srfi.schemers.org//srfi.css" type="text/css">
-    <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      table.t1 {
+        margin: 1em auto;
+        border-collapse: collapse;
+      }
+      .t1 th, .t1 td {
+        padding: 4px 8px;
+      }
+      .t1 thead th {
+        text-align: left;
+        font-size: 15px;
+      }
+      .t1 tr {
+        border-right: 1px solid;
+        border-left: 1px solid;
+      }
+      .t1 tbody tr {
+        border-bottom: 1px solid;
+      }
+     .t1 tbody tr:nth-child(odd) {
+        border-top: 1px solid;
+      }
+      .t1 tbody th, .t1 tbody tr:nth-child(even) td {
+        border-right: 1px solid;
+      }
+      .t1 tr *:nth-child(3), .t1 tr *:nth-child(4) {
+        text-align: right;
+      }
+    </style>
+  </head>
   <body>
     <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI logo" /></a>198: Foreign Interface Status</h1>
 
@@ -119,36 +149,6 @@ a foreign interface is invoked.
 <p>
 Example facilities include:
 </p>
-
-<style type="text/css">
-  table.t1 {
-    margin: 1em auto;
-    border-collapse: collapse;
-  }
-  .t1 th, .t1 td {
-    padding: 4px 8px;
-  }
-  .t1 thead th {
-    text-align: left;
-    font-size: 15px;
-  }
-  .t1 tr {
-    border-right: 1px solid;
-    border-left: 1px solid;
-  }
-  .t1 tbody tr {
-    border-bottom: 1px solid;
-  }
- .t1 tbody tr:nth-child(odd) {
-    border-top: 1px solid;
-  }
-  .t1 tbody th, .t1 tbody tr:nth-child(even) td {
-    border-right: 1px solid;
-  }
-  .t1 tr *:nth-child(3), .t1 tr *:nth-child(4) {
-    text-align: right;
-  }
-</style>
 
 <table class="t1">
 <tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
