@@ -30,9 +30,10 @@
       }
       .t1 tbody th, .t1 tbody tr:nth-child(even) td {
         border-right: 1px solid;
+        text-align: left;
       }
       .t1 tr *:nth-child(3), .t1 tr *:nth-child(4) {
-        text-align: right;
+        text-align: left;
       }
     </style>
   </head>
@@ -70,10 +71,13 @@ P<small>OSIX</small> API, databases, and libraries.
 
 <ul>
 <li>
-The 'facility key requires a better name, and it's not 'set.
+The <code>'facility</code> key requires a better name, and it's
+not <code>'set</code>.
+<code>'sub-facility</code> will follow the new name.
 </li>
 <li>
-If the 'facility key should be required for all status and error objects.
+If the <code>'facility</code> key should be required for all status
+and error objects.
 </li>
 <li>
 If the SRFI should return to using alists with their long history in
@@ -91,12 +95,13 @@ The exact set of "standard" keys to be defined in the "Standard status
 facility conventions" section:
 </li>
 <li>
-Should the standard key 'message be replaced by the shorter 'text?
+Should the standard key <code>'message</code> be replaced by the
+shorter <code>'text</code>?
 </li>
 <li>
-Should 'source-filename, 'line-number, and 'column-number be in the
-SRFI's list of standard keys, or in Schemeregistry?  They increase its
-surface by 50%.
+Should <code>'source-filename</code>, <code>'line-number</code>,
+and <code>'column-number</code> be in the SRFI's list of standard
+keys, or in Schemeregistry?  They increase its surface by one half.
 </li>
 </ul>
 
@@ -114,8 +119,8 @@ separate processes.</p>
 <p>This SRFI provides a comprehensive framework for placing data about
 the status of an interaction with a foreign system into an object,
 starting with <em>facilities</em> to partition collections of them,
-such as 'posix, 'postgresql, and 'libsodium, to localize them, and to
-report them.</p>
+such as <code>'errno</code>, <code>'sqlstate</code>, and
+<code>'generic-c-lib</code>, to localize them, and to report them.</p>
 
 <p>Sometimes it will make sense to simply return a status object, but
 an often preferred method for errors is to raise an exception, as in
@@ -141,24 +146,26 @@ a foreign interface is invoked.
 </p>
 
 <p>
-Example facilities include:
+Example facilities and sub-facilities include:
 </p>
 
 <table class="t1">
-<tr><th>'errno</th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
-<tr><th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">The PostgreSQL database</a></th></tr>
-<tr><th>'generic-c-lib</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
+<tr><th>'errno</th> <th></th> <th><a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html">P<small>OSIX</small> errnos</a></th></tr>
+<tr><th>'sqlstate</th> <th>'postgresql</th> <th><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">The PostgreSQL database</a></th></tr>
+<tr><th>'generic-c-lib</th> <th>'libsodium</th> <th><a href="https://doc.libsodium.org/">The libsodium cryptography library</a></th></tr>
 </table>
 
 <p>
-P<small>OSIX</small> errnos are a generally familiar error system with
-a moderate degree of structure, and the initial inspiration for this
-SRFI.  PostgreSQL is a representative SQL RDBMS with a richer set of
-status data that can be transmitted to the user, and its client/server
-organization is a useful counterpoint to getting an error through a
-FFI.  libsodium has a typical simple UNIX&trade; style C API that
-returns 0 on success and -1 on error, with no inherent structure.
-The generic-c-lib facility is suitable for many of these libraries.
+P<small>OSIX</small> errnos are a familiar error system with a
+moderate degree of structure, and were the initial inspiration for
+this SRFI.
+PostgreSQL is a representative SQL RDBMS with a richer set of SQLSTATE
+data that can be transmitted to the user, and its client/server
+organization is a useful counterpoint to using an FFI.
+libsodium has a typical simple UNIX&trade; style C API that returns 0
+on success and -1 on error, with no inherent structure.
+The <code>'generic-c-lib</code> facility is suitable for many of these
+libraries.
 <p>
 
 <p>
@@ -215,13 +222,13 @@ Returns all the keys in a foreign status object in a list.
 (foreign-status-keys &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility sqlstate category class-text condition-name scheme-procedure foreign-interface message args)
+  &rArr; (facility sub-facility sqlstate category class-text condition-name scheme-procedure foreign-interface message args)
 </pre>
 <pre class="example">
 (foreign-status-keys &lt;libsodium-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility scheme-procedure foreign-interface message)
+  &rArr; (facility sub-facility scheme-procedure foreign-interface message)
 </pre>
 </blockquote>
 
@@ -231,7 +238,7 @@ Returns all the keys in a foreign status object in a list.
 <blockquote>
 <p>
 Returns all the key/value pairs in a foreign status object as a plist,
-the 'facility key is guaranteed to be the first one.
+the <code>'facility</code> key is guaranteed to be the first one.
 It is an error to mutate the plist.
 </p>
 <pre class="example">
@@ -251,7 +258,8 @@ It is an error to mutate the plist.
 (foreign-status->plist &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility postgresql
+  &rArr; (facility sqlstate
+     sub-facility postgresql
      sqlstate "28P01"
      category exception
      class-text "Invalid Authorization Specification"
@@ -266,6 +274,7 @@ It is an error to mutate the plist.
 </pre>
 <pre class="example">
  &rArr; (facility generic-c-lib
+    sub-facility libsodium
     scheme-procedure generate-key
     foreign-interface sodium-init
     message "generate-key: ecb-generate-key could not initialize sodium library\n")
@@ -362,6 +371,11 @@ following it.
 The only mandatory key/value pair, it is used to divide the universe
 of foreign interfaces.  For more information see the text after the
 Specification heading.
+</li>
+<li>
+<code>sub-facility</code>:
+To further partition large facilities such as
+<code>'generic-c-lib</code>.
 </li>
 <li>
 <code>scheme-procedure</code>:
