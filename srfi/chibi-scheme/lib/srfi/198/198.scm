@@ -30,6 +30,8 @@
          (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not a list; see data for details")))
         ((not (pair? (car the-alist)))
          (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, not an alist; see data for details")))
+        ((not (symbol? (caar the-alist)))
+         (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, first key must be a symbol; see data for details")))
         (else (let ((the-error-set (assq 'error-set the-alist)))
                 (if (not the-error-set)
                     (make-foreign-error (make-malformed-foreign-error-alist the-alist "Malformed call to make-foreign-error, missing error-set; see data for details"))
