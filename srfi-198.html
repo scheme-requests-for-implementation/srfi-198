@@ -98,12 +98,6 @@ Should 'source-filename, 'line-number, and 'column-number be in the
 SRFI's list of standard keys, or in Schemeregistry?  They increase its
 surface by 50%.
 </li>
-<li>
-Should 'foreign-interface-args be added as a standard key?  It raises
-the issue of translating foreign interface types back into Scheme
-types, but that could be finessed, perhaps by converting everything
-non-obvious to strings.
-</li>
 </ul>
 
 <h2>Rationale</h2>
@@ -212,7 +206,7 @@ with <i>key</i> , or <code>#f</code> if <i>key</i> is not in the object.
 Returns all the keys in a foreign status object in a list.
 </p>
 <pre class="example">
-(foreign-status-plist &lt;POSIX-foreign-error-object&gt;)
+(foreign-status-keys &lt;POSIX-foreign-error-object&gt;)
 </pre>
 <pre class="example">
   &rArr; (facility errno number name scheme-procedure foreign-interface message args heritage)
@@ -233,7 +227,7 @@ Returns all the keys in a foreign status object in a list.
 
 <br>
 
-<code>(foreign-status-plist <i>foreign-status-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>plist</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
+<code>(foreign-status->plist <i>foreign-status-object</i>)</code> &nbsp;&nbsp;&nbsp; &rarr; &nbsp;&nbsp;&nbsp; <i>plist</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure)
 <blockquote>
 <p>
 Returns all the key/value pairs in a foreign status object as a plist,
@@ -241,7 +235,7 @@ the 'facility key is guaranteed to be the first one.
 It is an error to mutate the plist.
 </p>
 <pre class="example">
-(foreign-status-plist &lt;POSIX-foreign-error-object&gt;)
+(foreign-status->plist &lt;POSIX-foreign-error-object&gt;)
 </pre>
 <pre class="example">
   &rArr; (facility errno
@@ -254,7 +248,7 @@ It is an error to mutate the plist.
      heritage . "SRFI 170")
 </pre>
 <pre class="example">
-(foreign-status-plist &lt;PostgreSQL-wire-foreign-status-object&gt;)
+(foreign-status->plist &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
   &rArr; (facility postgresql
@@ -268,7 +262,7 @@ It is an error to mutate the plist.
      args ("localhost" 5432 "ecb" "ecb"))
 </pre>
 <pre class="example">
-(foreign-status-plist &lt;libsodium-foreign-status-object&gt;)
+(foreign-status->plist &lt;libsodium-foreign-status-object&gt;)
 </pre>
 <pre class="example">
  &rArr; (facility generic-c-lib
@@ -318,7 +312,7 @@ raising an exception means to call <code>raise</code> on the object.
 In a system only supporting
 <a href="https://srfi.schemers.org/srfi-23/srfi-23.html">SRFI 23</a>,
 raising an exception means calling <code>error</code> with a
-<code><i>reason</i></code> string and <code></i>irritants</i></code>
+<code><i>reason</i></code> string and <code><i>irritants</i></code>
 following it.
 </p>
 <pre class="example">
