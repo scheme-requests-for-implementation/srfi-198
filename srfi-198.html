@@ -71,12 +71,12 @@ P<small>OSIX</small> API, databases, and libraries.
 
 <ul>
 <li>
-The <code>'facility</code> key requires a better name, and it's
+The <code>'convention</code> key requires a better name, and it's
 not <code>'set</code>.
-<code>'sub-facility</code> will follow the new name.
+<code>'sub-convention</code> will follow the new name.
 </li>
 <li>
-If the <code>'facility</code> key should be required for all status
+If the <code>'convention</code> key should be required for all status
 and error objects.
 </li>
 <li>
@@ -92,7 +92,7 @@ by foreign-status-ref, and alternatively, how to retrieve them.
 </li>
 <li>
 The exact set of "standard" keys to be defined in the "Standard status
-facility conventions" section:
+conventions" section:
 </li>
 <li>
 Should the standard key <code>'message</code> be replaced by the
@@ -118,7 +118,7 @@ separate processes.</p>
 
 <p>This SRFI provides a comprehensive framework for placing data about
 the status of an interaction with a foreign system into an object,
-starting with <em>facilities</em> to partition collections of them,
+starting with <em>conventions</em> to partition collections of them,
 such as <code>'errno</code>, <code>'sqlstate</code>, and
 <code>'generic-c-lib</code>, to localize them, and to report them.</p>
 
@@ -139,14 +139,14 @@ point of view.</p>
 
 <p>
 The universe of foreign statuses is divided into distinct collections
-named <em>facilities</em> based on their source.
-The facilities <code>'status</code> and <code>'error</code> are
+named <em>conventions</em> based on their source.
+The conventions <code>'status</code> and <code>'error</code> are
 reserved for generic situations, such as sanity error checking before
 a foreign interface is invoked.
 </p>
 
 <p>
-Example facilities and sub-facilities include:
+Example conventions and sub-conventions include:
 </p>
 
 <table class="t1">
@@ -164,7 +164,7 @@ data that can be transmitted to the user, and its client/server
 organization is a useful counterpoint to using an FFI.
 libsodium has a typical simple UNIX&trade; style C API that returns 0
 on success and -1 on error, with no inherent structure.
-The <code>'generic-c-lib</code> facility is suitable for many of these
+The <code>'generic-c-lib</code> convention is suitable for many of these
 libraries.
 <p>
 
@@ -201,7 +201,7 @@ with <i>key</i> , or <code>#f</code> if <i>key</i> is not in the object.
 </p>
 <pre class="example">
 (foreign-status-ref &lt;foreign-status-object&gt; &lt;key not in object&gt;) &rArr; #f
-(foreign-status-ref &lt;POSIX-foreign-error-object&gt; 'facility) &rArr; errno
+(foreign-status-ref &lt;POSIX-foreign-error-object&gt; 'convention) &rArr; errno
 </pre>
 </blockquote>
 
@@ -216,19 +216,19 @@ Returns all the keys in a foreign status object in a list.
 (foreign-status-keys &lt;POSIX-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility errno number name scheme-procedure foreign-interface message args heritage)
+  &rArr; (convention errno number name scheme-procedure foreign-interface message args heritage)
 </pre>
 <pre class="example">
 (foreign-status-keys &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility sub-facility sqlstate category class-text condition-name scheme-procedure foreign-interface message args)
+  &rArr; (convention sub-convention sqlstate category class-text condition-name scheme-procedure foreign-interface message args)
 </pre>
 <pre class="example">
 (foreign-status-keys &lt;libsodium-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility sub-facility scheme-procedure foreign-interface message)
+  &rArr; (convention sub-convention scheme-procedure foreign-interface message)
 </pre>
 </blockquote>
 
@@ -238,14 +238,14 @@ Returns all the keys in a foreign status object in a list.
 <blockquote>
 <p>
 Returns all the key/value pairs in a foreign status object as a plist,
-the <code>'facility</code> key is guaranteed to be the first one.
+the <code>'convention</code> key is guaranteed to be the first one.
 It is an error to mutate the plist.
 </p>
 <pre class="example">
 (foreign-status->plist &lt;POSIX-foreign-error-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility errno
+  &rArr; (convention errno
      number 2
      name ENOENT
      scheme-procedure open-file
@@ -258,8 +258,8 @@ It is an error to mutate the plist.
 (foreign-status->plist &lt;PostgreSQL-wire-foreign-status-object&gt;)
 </pre>
 <pre class="example">
-  &rArr; (facility sqlstate
-     sub-facility postgresql
+  &rArr; (convention sqlstate
+     sub-convention postgresql
      sqlstate "28P01"
      category exception
      class-text "Invalid Authorization Specification"
@@ -273,8 +273,8 @@ It is an error to mutate the plist.
 (foreign-status->plist &lt;libsodium-foreign-status-object&gt;)
 </pre>
 <pre class="example">
- &rArr; (facility generic-c-lib
-    sub-facility libsodium
+ &rArr; (convention generic-c-lib
+    sub-convention libsodium
     scheme-procedure generate-key
     foreign-interface sodium-init
     message "generate-key: ecb-generate-key could not initialize sodium library\n")
@@ -285,18 +285,18 @@ It is an error to mutate the plist.
 <h3>Status constructors</h3>
 
 <p>
-<code>(make-foreign-status <i>facility-value plist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-status-object</i> &nbsp;&nbsp;&nbsp;(procedure)
+<code>(make-foreign-status <i>convention-value plist</i>)</code> &nbsp; &rarr; &nbsp; <i>foreign-status-object</i> &nbsp;&nbsp;&nbsp;(procedure)
 </p>
 <p>
-<code>(raise-foreign-error <i>facility-value plist</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
+<code>(raise-foreign-error <i>convention-value plist</i>)</code> &nbsp; &rarr; &nbsp; <i>undefined</i> &nbsp;&nbsp;&nbsp;(procedure)
 </p>
 <blockquote>
 <p>
-These procedures are handed a value for the facility key, and a plist,
+These procedures are handed a value for the convention key, and a plist,
 and return an abstract data type object.
 It is an error to pass non-symbols as keys in the plist, if the plist
 does not have an even number of elements, or if
-the <code>'facility</code> key/value pair is not in the object.
+the <code>'convention</code> key/value pair is not in the object.
 If the plist argument is malformed, an error is signaled.  Except for
 small memory implementations, these procedures must preserve the
 malformed argument for end users as the value of
@@ -305,7 +305,7 @@ the <code>'args</code> key.
 <p>
 A recommended approach to handle a malformed argument is to create a
 status object with either <code>'status</code> or <code>'error</code>
-as the value of the <code>'facility</code> key, make the argument the
+as the value of the <code>'convention</code> key, make the argument the
 value of the <code>'args</code> key, and supply an informative
 <code>'message</code>.
 </p>
@@ -363,19 +363,18 @@ following it.
 </blockquote>
 
 
-<h3>Standard facility conventions</h3>
+<h3>Standard conventions</h3>
 
 <ul>
 <li>
-<code>facility</code>:
+<code>convention</code>:
 The only mandatory key/value pair, it is used to divide the universe
 of foreign interfaces.  For more information see the text after the
 Specification heading.
 </li>
 <li>
-<code>sub-facility</code>:
-To further partition large facilities such as
-<code>'generic-c-lib</code>.
+<code>sub-convention</code>:
+To further subdivide large conventions such as <code>'generic-c-lib</code>.
 </li>
 <li>
 <code>scheme-procedure</code>:
